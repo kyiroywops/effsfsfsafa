@@ -50,19 +50,19 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyB-J_6PEVRDZqjo7O66xSQ7ASvtvNPPT2w',
-    appId: '1:403920796419:android:e071febfa826edefb68736',
-    messagingSenderId: '403920796419',
-    projectId: 'gymtrack-cb100',
-    storageBucket: 'gymtrack-cb100.appspot.com',
+    apiKey: 'AIzaSyCfj-cxECQ3SqSV_pXgnXVQkgC44J0OVAk',
+    appId: '1:456103746725:android:ba13a6c8041c81c4b8414c',
+    messagingSenderId: '456103746725',
+    projectId: 'gymtrackapp-a2e77',
+    storageBucket: 'gymtrackapp-a2e77.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCKDwfEj-6clPyUSfv38K-QCidkcOSC258',
-    appId: '1:403920796419:ios:cc76fc1dfe809432b68736',
-    messagingSenderId: '403920796419',
-    projectId: 'gymtrack-cb100',
-    storageBucket: 'gymtrack-cb100.appspot.com',
+    apiKey: 'AIzaSyAA9SfvDrF-Z3PMcs2SGl8FQRzficumLno',
+    appId: '1:456103746725:ios:b1df534468878f2cb8414c',
+    messagingSenderId: '456103746725',
+    projectId: 'gymtrackapp-a2e77',
+    storageBucket: 'gymtrackapp-a2e77.appspot.com',
     iosBundleId: 'com.example.gymtrack',
   );
 }

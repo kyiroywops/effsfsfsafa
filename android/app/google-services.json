@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "403920796419",
-    "project_id": "gymtrack-cb100",
-    "storage_bucket": "gymtrack-cb100.appspot.com"
+    "project_number": "456103746725",
+    "project_id": "gymtrackapp-a2e77",
+    "storage_bucket": "gymtrackapp-a2e77.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:403920796419:android:e071febfa826edefb68736",
+        "mobilesdk_app_id": "1:456103746725:android:ba13a6c8041c81c4b8414c",
         "android_client_info": {
           "package_name": "com.example.gymtrack"
         }
@@ -15,26 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyB-J_6PEVRDZqjo7O66xSQ7ASvtvNPPT2w"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:403920796419:android:be5ebc4ca91aa1d7b68736",
-        "android_client_info": {
-          "package_name": "com.example.gymtracker"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyB-J_6PEVRDZqjo7O66xSQ7ASvtvNPPT2w"
+          "current_key": "AIzaSyCfj-cxECQ3SqSV_pXgnXVQkgC44J0OVAk"
         }
       ],
       "services": {
