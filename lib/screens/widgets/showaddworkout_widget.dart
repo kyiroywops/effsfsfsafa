@@ -33,17 +33,19 @@ class AddWorkoutBottomSheet extends StatefulWidget {
 class _AddWorkoutBottomSheetState extends State<AddWorkoutBottomSheet> {
   Exercise? selectedExercise;
   List<Exercise>? exercises;
-  final TextEditingController _textEditingController = TextEditingController();
+ TextEditingController _textEditingController = TextEditingController();
   ValueKey<int> autocompleteKey = ValueKey(0); // Inicializa con un valor por defecto
 
   @override
-  void initState() {
-    super.initState();
-    _loadExercises().then((loadedExercises) {
-      setState(() => exercises = loadedExercises);
+void initState() {
+  super.initState();
+  _textEditingController = TextEditingController(text: ' '); // Inicializa con un espacio en blanco
+  _loadExercises().then((loadedExercises) {
+    setState(() {
+      exercises = loadedExercises;
     });
-  }
-
+  });
+}
   Future<List<Exercise>> _loadExercises() async {
     final jsonString = await rootBundle.loadString('assets/jsons/exercises.json');
     final jsonResponse = json.decode(jsonString) as List;
@@ -101,15 +103,15 @@ class _AddWorkoutBottomSheetState extends State<AddWorkoutBottomSheet> {
             Autocomplete<Exercise>(
         key: autocompleteKey, // Usa la key que se reinicia con _clearSelection
 
-  optionsBuilder: (TextEditingValue textEditingValue) {
-    if (selectedExercise != null || textEditingValue.text.isEmpty) {
-      return const Iterable<Exercise>.empty();
-    } else {
-      return exercises!.where((Exercise option) {
-        return option.name.toLowerCase().contains(textEditingValue.text.toLowerCase());
-      });
-    }
-  },
+optionsBuilder: (TextEditingValue textEditingValue) {
+  if (textEditingValue.text.isEmpty) {
+    return exercises ?? const Iterable<Exercise>.empty(); // Retorna todas las opciones si no hay texto ingresado
+  } else {
+    return exercises!.where((Exercise option) {
+      return option.name.toLowerCase().contains(textEditingValue.text.toLowerCase());
+    });
+  }
+},
 fieldViewBuilder: (
   BuildContext context,
   TextEditingController textEditingController,
@@ -139,6 +141,9 @@ fieldViewBuilder: (
           Padding(
             padding: const EdgeInsets.fromLTRB(48.0, 8.0, 8.0, 8.0), // Ajustar los valores para posicionar correctamente el Chip.
             child: Chip(
+              backgroundColor: Colors.grey[900],
+              deleteIconColor: Colors.white,
+              labelStyle: TextStyle(color: Colors.white),
               label: Text(selectedExercise!.name),
               avatar: Image.asset('assets/images/icons/${selectedExercise!.icon}', width: 24, height: 24),
               onDeleted: _clearSelection,
