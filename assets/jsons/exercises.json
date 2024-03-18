@@ -1,0 +1,18 @@
+[
+  {
+    "name": "Sentadillas",
+    "icon": "piernas1.png"
+  },
+  {
+    "name": "Press de banca",
+    "icon": "pecho1.png"
+  },
+  {
+    "name": "Dominadas",
+    "icon": "espalda1.png"
+  },
+  {
+    "name": "Curl de bíceps",
+    "icon": "biceps1.png"
+  }
+]

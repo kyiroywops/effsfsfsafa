@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gymtrack/screens/screens/home_page.dart';
 import 'package:gymtrack/screens/screens/profile_page.dart';
+import 'package:gymtrack/screens/widgets/showaddworkout_widget.dart';
 
 class BaseScreen extends StatefulWidget {
   @override
@@ -16,6 +17,16 @@ class _BaseScreenState extends State<BaseScreen> {
     Text('Estadísticas', textAlign: TextAlign.center), // Estadísticas
     ProfileScreen(), // Perfil
   ];
+
+   void _onItemTapped(int index) {
+    if (index == 2) { // Si el índice corresponde al botón "+"
+      showAddWorkoutBottomSheet(context);
+    } else {
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +69,20 @@ class _BaseScreenState extends State<BaseScreen> {
   }
 
   Widget _buildUploadNavItem() {
-    return Container(
+  return InkWell(
+    onTap: () {
+      // Aquí llamas a tu función para mostrar el BottomSheet
+      try {
+  showAddWorkoutBottomSheet(context);
+} catch (e, stack) {
+  print('Error al mostrar AddWorkoutBottomSheet: $e');
+  print(stack);
+}
+
+    },
+    splashColor: Colors.transparent, // Esto quita el efecto de onda al tocar
+    highlightColor: Colors.transparent, // Esto quita el efecto de realce al tocar
+    child: Container(
       width: 60, // Ajustar el ancho si es necesario para el elemento del medio
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -74,6 +98,8 @@ class _BaseScreenState extends State<BaseScreen> {
           Text('Subir', style: TextStyle(color: Colors.white, fontSize: 10)), // Texto siempre visible
         ],
       ),
-    );
-  }
+    ),
+  );
+}
+
 }

@@ -1,0 +1,202 @@
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
+
+// Define la clase Exercise para manejar los datos de los ejercicios
+class Exercise {
+  final String name;
+  final String icon;
+
+  Exercise({required this.name, required this.icon});
+
+  factory Exercise.fromJson(Map<String, dynamic> json) {
+    return Exercise(
+      name: json['name'],
+      icon: json['icon'],
+    );
+  }
+}
+
+void showAddWorkoutBottomSheet(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    isDismissible: true,
+    backgroundColor: Colors.transparent,
+    builder: (BuildContext context) => AddWorkoutBottomSheet(),
+  );
+}
+
+// Un StatefulWidget para manejar el estado de la selección del ejercicio
+class AddWorkoutBottomSheet extends StatefulWidget {
+  @override
+  _AddWorkoutBottomSheetState createState() => _AddWorkoutBottomSheetState();
+}
+
+class _AddWorkoutBottomSheetState extends State<AddWorkoutBottomSheet> {
+    Exercise? selectedExercise;
+  List<Exercise>? exercises;
+  final TextEditingController _textEditingController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadExercises().then((loadedExercises) {
+      setState(() => exercises = loadedExercises);
+    });
+  }
+
+  Future<List<Exercise>> _loadExercises() async {
+    final jsonString = await rootBundle.loadString('assets/jsons/exercises.json');
+    final jsonResponse = json.decode(jsonString) as List;
+    return jsonResponse.map((json) => Exercise.fromJson(json)).toList();
+  }
+
+void _selectExercise(Exercise selection) {
+  setState(() {
+    selectedExercise = selection;
+  });
+}
+
+void _clearSelection() {
+  setState(() {
+    selectedExercise = null;
+    _textEditingController.clear(); // Esto asegura que el texto del TextField se borre
+  });
+}
+
+
+  @override
+  Widget build(BuildContext context) {
+
+    return exercises == null
+        ? Center(child: CircularProgressIndicator())
+        : DraggableScrollableSheet(
+            initialChildSize: 0.6,
+            maxChildSize: 0.6,
+            minChildSize: 0.6,
+            expand: false,
+            builder: (_, controller) {
+              return Container(
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.75),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(12.0),
+                    topRight: Radius.circular(12.0),
+                  ),
+                ),
+                child: ListView(
+                  controller: controller,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                           Text("Selecciona el ejercicio", /* Estilo */),
+                SizedBox(height: 20),
+            Autocomplete<Exercise>(
+  optionsBuilder: (TextEditingValue textEditingValue) {
+    if (selectedExercise != null || textEditingValue.text.isEmpty) {
+      return const Iterable<Exercise>.empty();
+    } else {
+      return exercises!.where((Exercise option) {
+        return option.name.toLowerCase().contains(textEditingValue.text.toLowerCase());
+      });
+    }
+  },
+fieldViewBuilder: (
+  BuildContext context,
+  TextEditingController textEditingController,
+  FocusNode focusNode,
+  VoidCallback onFieldSubmitted
+) {
+  return Container(
+    height: 60.0, // Define la altura del contenedor del TextField.
+    child: Stack(
+      alignment: Alignment.centerLeft,
+      children: [
+        TextField(
+          controller: textEditingController,
+          focusNode: focusNode,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+            filled: true,
+            fillColor: Colors.white,
+            hintText: 'Escribe para buscar...',
+            prefixIcon: Icon(Icons.search),
+          ),
+          // Solo debería ser readOnly si hay una selección.
+          readOnly: selectedExercise != null,
+        ),
+        // Coloca el Chip encima del TextField solo si hay una selección.
+        if (selectedExercise != null)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(48.0, 8.0, 8.0, 8.0), // Ajustar los valores para posicionar correctamente el Chip.
+            child: Chip(
+              label: Text(selectedExercise!.name),
+              avatar: Image.asset('assets/images/icons/${selectedExercise!.icon}', width: 24, height: 24),
+              onDeleted: _clearSelection,
+            ),
+          ),
+      ],
+    ),
+  );
+},
+  optionsViewBuilder: (BuildContext context, AutocompleteOnSelected<Exercise> onSelected, Iterable<Exercise> options) {
+    return Align(
+      alignment: Alignment.topLeft,
+      child: Material(
+        child: Container(
+          width: 300, // Ajusta esto según sea necesario para tu diseño
+          color: Colors.white,
+          child: ListView(
+            children: options.map((Exercise option) => GestureDetector(
+              onTap: () {
+                onSelected(option);
+              },
+              child: ListTile(
+                leading: Image.asset('assets/images/icons/${option.icon}', width: 30, height: 30),
+                title: Text(option.name),
+              ),
+            )).toList(),
+          ),
+        ),
+      ),
+    );
+  },
+ onSelected: (Exercise selection) {
+  setState(() {
+    selectedExercise = selection;
+    // No hay necesidad de actualizar el textEditingController aquí.
+  });
+},
+  displayStringForOption: (Exercise option) => option.name, // Define cómo se muestra el objeto Exercise
+),
+
+                          SizedBox(height: 20),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.black,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                            child: Text(
+                              "Añadir",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+  }
+}
