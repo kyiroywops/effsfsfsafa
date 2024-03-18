@@ -153,28 +153,50 @@ fieldViewBuilder: (
     ),
   );
 },
-  optionsViewBuilder: (BuildContext context, AutocompleteOnSelected<Exercise> onSelected, Iterable<Exercise> options) {
-    return Align(
-      alignment: Alignment.topLeft,
+optionsViewBuilder: (
+  BuildContext context, 
+  AutocompleteOnSelected<Exercise> onSelected, 
+  Iterable<Exercise> options
+) {
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: Align(
+      alignment: Alignment.topCenter,
       child: Material(
+        elevation: 4.0, // Añade algo de sombra
+        borderRadius: BorderRadius.circular(10.0), // Esquinas redondeadas
+        color: Colors.transparent, // Evita el fondo por defecto
         child: Container(
           width: 300, // Ajusta esto según sea necesario para tu diseño
-          color: Colors.white,
-          child: ListView(
-            children: options.map((Exercise option) => GestureDetector(
-              onTap: () {
-                onSelected(option);
-              },
-              child: ListTile(
-                leading: Image.asset('assets/images/icons/${option.icon}', width: 30, height: 30),
-                title: Text(option.name),
-              ),
-            )).toList(),
+          decoration: BoxDecoration(
+            color: Colors.black, // Color de fondo del contenedor
+            borderRadius: BorderRadius.circular(10.0), // Esquinas redondeadas
+          ),
+          child: Scrollbar(
+            
+            thickness: 6.0, // Grosor de la barra de desplazamiento
+            radius: Radius.circular(5.0), // Esquinas redondeadas para la barra de desplazamiento
+            child: ListView(
+              padding: EdgeInsets.zero,
+              shrinkWrap: true,
+              children: options.map((Exercise option) => GestureDetector(
+                onTap: () => onSelected(option),
+                child: ListTile(
+                  title: Text(
+                    option.name,
+                    style: TextStyle(color: Colors.white), // Texto claro
+                  ),
+                  leading: Image.asset('assets/images/icons/${option.icon}', width: 30, height: 30),
+                ),
+              )).toList(),
+            ),
           ),
         ),
       ),
-    );
-  },
+    ),
+  );
+},
+
  onSelected: (Exercise selection) {
   setState(() {
     selectedExercise = selection;
