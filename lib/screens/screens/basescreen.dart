@@ -39,22 +39,23 @@ class _BaseScreenState extends State<BaseScreen> {
             color: Colors.black,
             tabs: [
               GButton(
-                icon: Icons.home,
-                text: 'Bags',
+                icon: Icons.history, // Cambiado a un ícono de historial
+                text: 'Historial',
               ),
               GButton(
-                icon: Icons.style,
-                text: 'Articles',
+                icon: Icons.calendar_today, // Cambiado a un ícono de calendario
+                text: 'Calendar',
               ),
               GButton(
-                icon: Icons.cleaning_services,
-                text: 'Wash',
+                icon: Icons.bar_chart, // Cambiado a un ícono de estadísticas
+                text: 'Stadistics',
               ),
               GButton(
-                icon: Icons.person,
+                icon: Icons.person, // Este ya estaba configurado para el perfil
                 text: 'Profile',
               ),
             ],
+
             selectedIndex: _selectedIndex,
             onTabChange: (index) {
               setState(() {
