@@ -38,6 +38,21 @@ class HomeScreen extends StatelessWidget {
                         style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                       SizedBox(height: 20),
+                      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                       ElevatedButton(
                         onPressed: () {
                           // Aquí se añadiría la lógica para añadir el entrenamiento
@@ -49,6 +64,7 @@ class HomeScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(20), // Bordes redondeados
                           ),
                         ),
+
                         child: Text(
                           "Añadir",
                           style: TextStyle(color: Colors.white),
