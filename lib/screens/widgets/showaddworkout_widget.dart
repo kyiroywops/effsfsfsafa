@@ -6,9 +6,7 @@ import 'package:flutter/services.dart' show rootBundle;
 class Exercise {
   final String name;
   final String icon;
-
   Exercise({required this.name, required this.icon});
-
   factory Exercise.fromJson(Map<String, dynamic> json) {
     return Exercise(
       name: json['name'],
@@ -27,16 +25,16 @@ void showAddWorkoutBottomSheet(BuildContext context) {
   );
 }
 
-// Un StatefulWidget para manejar el estado de la selección del ejercicio
 class AddWorkoutBottomSheet extends StatefulWidget {
   @override
   _AddWorkoutBottomSheetState createState() => _AddWorkoutBottomSheetState();
 }
 
 class _AddWorkoutBottomSheetState extends State<AddWorkoutBottomSheet> {
-    Exercise? selectedExercise;
+  Exercise? selectedExercise;
   List<Exercise>? exercises;
   final TextEditingController _textEditingController = TextEditingController();
+  ValueKey<int> autocompleteKey = ValueKey(0); // Inicializa con un valor por defecto
 
   @override
   void initState() {
@@ -52,18 +50,23 @@ class _AddWorkoutBottomSheetState extends State<AddWorkoutBottomSheet> {
     return jsonResponse.map((json) => Exercise.fromJson(json)).toList();
   }
 
-void _selectExercise(Exercise selection) {
-  setState(() {
-    selectedExercise = selection;
-  });
-}
+  void _clearSelection() {
+    setState(() {
+      selectedExercise = null;
+      _textEditingController.clear();
+      autocompleteKey = ValueKey(DateTime.now().millisecondsSinceEpoch);
+    });
+  }
 
-void _clearSelection() {
-  setState(() {
-    selectedExercise = null;
-    _textEditingController.clear(); // Esto asegura que el texto del TextField se borre
-  });
-}
+  void _selectExercise(Exercise selection) {
+    setState(() {
+      selectedExercise = selection;
+    });
+  }
+
+
+
+
 
 
   @override
@@ -96,6 +99,8 @@ void _clearSelection() {
                            Text("Selecciona el ejercicio", /* Estilo */),
                 SizedBox(height: 20),
             Autocomplete<Exercise>(
+        key: autocompleteKey, // Usa la key que se reinicia con _clearSelection
+
   optionsBuilder: (TextEditingValue textEditingValue) {
     if (selectedExercise != null || textEditingValue.text.isEmpty) {
       return const Iterable<Exercise>.empty();
@@ -117,18 +122,18 @@ fieldViewBuilder: (
       alignment: Alignment.centerLeft,
       children: [
         TextField(
-          controller: textEditingController,
-          focusNode: focusNode,
-          decoration: InputDecoration(
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-            filled: true,
-            fillColor: Colors.white,
-            hintText: 'Escribe para buscar...',
-            prefixIcon: Icon(Icons.search),
-          ),
-          // Solo debería ser readOnly si hay una selección.
-          readOnly: selectedExercise != null,
-        ),
+  controller: textEditingController,
+  focusNode: focusNode,
+  decoration: InputDecoration(
+    border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+    filled: true,
+    fillColor: Colors.white,
+    hintText: 'Escribe para buscar...',
+    prefixIcon: Icon(Icons.search),
+  ),
+  // El campo debe ser de solo lectura únicamente si hay una selección
+  readOnly: selectedExercise != null,
+),
         // Coloca el Chip encima del TextField solo si hay una selección.
         if (selectedExercise != null)
           Padding(
@@ -198,5 +203,9 @@ fieldViewBuilder: (
               );
             },
           );
+          
   }
+
+  
 }
+
