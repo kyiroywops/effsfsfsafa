@@ -20,8 +20,8 @@ class _GymItemRowState extends State<GymItemRow> {
     GymItem(name: 'Mancuerna', iconPath: 'assets/images/icons/mancuernas.png'),
     GymItem(name: 'Barra', iconPath: 'assets/images/icons/mancuernas.png'),
     GymItem(name: 'Máquina', iconPath: 'assets/images/icons/mariposa.png'),
-    GymItem(name: 'Balón', iconPath: 'assets/images/icons/mancuernas.png'),
-    GymItem(name: 'Bicicleta', iconPath: 'assets/images/icons/mancuernas.png'),
+    GymItem(name: 'Polea', iconPath: 'assets/images/icons/mancuernas.png'),
+    GymItem(name: 'Multipower', iconPath: 'assets/images/icons/mancuernas.png'),
   ];
 
   @override

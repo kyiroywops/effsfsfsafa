@@ -30,8 +30,31 @@ flutter_icons:
 
 flutter:
   uses-material-design: true
+
+  fonts:
+    - family: Geologica
+      fonts:
+        - asset: assets/fonts/Geologica-Thin.ttf
+          weight: 100
+        - asset: assets/fonts/Geologica-ExtraLight.ttf
+          weight: 200
+        - asset: assets/fonts/Geologica-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Geologica-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Geologica-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Geologica-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Geologica-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Geologica-Black.ttf
+          weight: 800
+        - asset: assets/fonts/Geologica-ExtraBold.ttf
+          weight: 900
+
   assets:
-  - assets/icons/
-  - assets/images/
-  - assets/jsons/
-  - assets/images/icons/
+    - assets/icons/
+    - assets/images/
+    - assets/jsons/
+    - assets/images/icons/

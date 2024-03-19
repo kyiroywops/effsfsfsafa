@@ -30,6 +30,7 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             // Aquí va el resto de tu UI
+            
           ],
         ),
       ),

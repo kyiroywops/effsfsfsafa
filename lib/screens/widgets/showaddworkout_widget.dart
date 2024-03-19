@@ -86,7 +86,7 @@ void initState() {
             builder: (_, controller) {
               return Container(
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.75),
+                  color: Colors.grey.shade300.withOpacity(0.85),
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(12.0),
                     topRight: Radius.circular(12.0),
@@ -100,9 +100,9 @@ void initState() {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
-                           Text("Selecciona el ejercicio", /* Estilo */),
+                           Text("Add quick exercise", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Colors.black, fontFamily: 'Geologica'),) ,
                 SizedBox(height: 20),
-            Autocomplete<Exercise>(
+            Autocomplete<Exercise>( 
         key: autocompleteKey, // Usa la key que se reinicia con _clearSelection
 
 optionsBuilder: (TextEditingValue textEditingValue) {
@@ -242,46 +242,3 @@ SeriesWidget(),
 
 
 
-class IconoConTexto extends StatefulWidget {
-  final String iconPath;
-  final String label;
-
-  const IconoConTexto({Key? key, required this.iconPath, required this.label}) : super(key: key);
-
-  @override
-  _IconoConTextoState createState() => _IconoConTextoState();
-}
-
-class _IconoConTextoState extends State<IconoConTexto> {
-  bool isHovered = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        // Acción al tocar el widget
-      },
-      onHover: (value) {
-        setState(() {
-          isHovered = value;
-        });
-      },
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            padding: EdgeInsets.all(8), // Espacio alrededor del círculo
-            decoration: BoxDecoration(
-              color: isHovered ? Colors.blue.withOpacity(0.3) : Colors.transparent, // Color de fondo al pasar el cursor
-              shape: BoxShape.circle,
-            ),
-            child: ClipOval(
-              child: Image.asset(widget.iconPath, width: 20, height: 50),
-            ),
-          ),
-          Text(widget.label),
-        ],
-      ),
-    );
-  }
-}
