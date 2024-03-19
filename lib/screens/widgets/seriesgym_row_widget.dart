@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -112,176 +113,188 @@ void _updateCount(int serieIndex, int delta) {
               ),
               Padding(
                 padding: const EdgeInsets.all(12.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-              
-        Container(
-          
-          height: 50,
-  decoration: BoxDecoration(
-    border: Border.all(
-      color: isSelectedList[serieIndex] ? Colors.blue : Colors.grey,
-      width: 1.0,
-    ),
-    borderRadius: BorderRadius.circular(10),
-  ),
-  child: Row(
-    children: <Widget>[
-      IconButton(
-        icon: Icon(Icons.remove, size: 10),
-        onPressed: () => _updateWeight(serieIndex, -1),
-           padding: EdgeInsets.zero, // Elimina padding adicional
-        constraints: BoxConstraints(minWidth: 10, minHeight: 10), // Menores restricciones
-      ),
-      Column(
-        children: [
-          Text(
-            "Weight",
-            style: TextStyle(fontSize: 10),
-          ),
-          Container(
-            width: 30,
-            height: 30, // Altura fija para el TextField
-            child: TextField(
-              textAlign: TextAlign.center,
-              controller: weightControllers[serieIndex],
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                
-                border: InputBorder.none,
-                hintText: '0',
-              ),
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-            ),
-          ),
-        ],
-      ),
-      IconButton(
-        icon: Icon(Icons.add, size: 20),
-           padding: EdgeInsets.zero, // Elimina padding adicional
-        constraints: BoxConstraints(minWidth: 10, minHeight: 10), // Menores restricciones
-        
-        onPressed: () => _updateWeight(serieIndex, 1),
-      ),
-    ],
-  ),
-),
-
-                    InkWell(
-  onTap: () {
-    setState(() {
-      // Cambia entre KG y LB cuando se toca
-      selectedUnit = (selectedUnit == 'KG') ? 'LB' : 'KG';
-    });
-  },
-  child: Container(
-    padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-    decoration: BoxDecoration(
-      border: Border.all(color: Colors.grey),
-      borderRadius: BorderRadius.circular(12.0),
-    ),
-    child: Row(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        // Icono a la izquierda
-        Icon(
-          Icons.chevron_left,
-          color: Colors.grey,
-          size: 20.0,
-        ),
-        // Espacio entre el icono y el texto
-        SizedBox(width: 8.0),
-        // Columna para el texto "Medida" y el valor de la unidad
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              "Medida", // Título encima del valor de la unidad
-              style: TextStyle(
-                fontSize: 12.0,
-                color: Colors.grey,
-              ),
-            ),
-            Text(
-              selectedUnit,
-              style: TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey,
-              ),
-            ),
-          ],
-        ),
-        // Espacio entre el texto y el icono
-        SizedBox(width: 8.0),
-        // Icono a la derecha
-        Icon(
-          Icons.chevron_right,
-          color: Colors.grey,
-          size: 20.0,
-        ),
-      ],
-    ),
-  ),
-),
-
-
-
-
-
-
-
-
-        Container(
-  decoration: BoxDecoration(
-    border: Border.all(
-      color: Colors.grey,
-      width: 1.0,
-    ),
-    borderRadius: BorderRadius.circular(10),
-  ),
-  child: Row(
-    mainAxisSize: MainAxisSize.min,
-    children: <Widget>[
-      IconButton(
-        icon: Icon(Icons.remove, size: 20),
-        onPressed: () => _updateCount(serieIndex, -1),
-      ),
-      Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            "Assists", // Puedes cambiar este texto por lo que corresponda (ej. "Reps" para repeticiones)
-            style: TextStyle(fontSize: 10),
-          ),
-          Container(
-            width: 35,
-            height: 35,
-            child: TextField(
-              controller: countControllers[serieIndex],
-              keyboardType: TextInputType.number,
-              textAlign: TextAlign.center,
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: '0',
-              ),
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-          ),
-        ],
-      ),
-      IconButton(
-        icon: Icon(Icons.add, size: 20),
-        onPressed: () => _updateCount(serieIndex, 1),
-      ),
-    ],
-  ),
-)
-
-                  ],
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                                
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              
+                              
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                  color: isSelectedList[serieIndex] ? Colors.blue : Colors.grey,
+                  width: 1.0,
+                                ),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Row(
+                                children: <Widget>[
+                  IconButton(
+                            icon: Icon(Icons.remove, size: 10),
+                            onPressed: () => _updateWeight(serieIndex, -1),
+                               padding: EdgeInsets.zero, // Elimina padding adicional
+                            constraints: BoxConstraints(minWidth: 10, minHeight: 10), // Menores restricciones
+                  ),
+                  Column(
+                            children: [
+                              Text(
+                                "Weight",
+                                style: TextStyle(fontSize: 10),
+                              ),
+                              Container(
+                                width: 35,
+                                height: 35, // Altura fija para el TextField
+                                child: TextField(
+                  textAlign: TextAlign.center,
+                  controller: weightControllers[serieIndex],
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    
+                    border: InputBorder.none,
+                    hintText: '0',
+                  ),
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ],
+                  ),
+                  IconButton(
+                            icon: Icon(Icons.add, size: 20),
+                               padding: EdgeInsets.zero, // Elimina padding adicional
+                            constraints: BoxConstraints(minWidth: 10, minHeight: 10), // Menores restricciones
+                            
+                            onPressed: () => _updateWeight(serieIndex, 1),
+                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                  
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              // Cambia entre KG y LB cuando se toca
+                              selectedUnit = (selectedUnit == 'KG') ? 'LB' : 'KG';
+                            });
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                // Icono a la izquierda
+                                Icon(
+                                  Icons.chevron_left,
+                                  color: Colors.grey,
+                                  size: 20.0,
+                                ),
+                                // Espacio entre el icono y el texto
+                                SizedBox(width: 8.0),
+                                // Columna para el texto "Medida" y el valor de la unidad
+                                Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      "Medida", // Título encima del valor de la unidad
+                                      style: TextStyle(
+                                        fontSize: 12.0,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    Text(
+                                      selectedUnit,
+                                      style: TextStyle(
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                // Espacio entre el texto y el icono
+                                SizedBox(width: 8.0),
+                                // Icono a la derecha
+                                Icon(
+                                  Icons.chevron_right,
+                                  color: Colors.grey,
+                                  size: 20.0,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                  color: Colors.grey,
+                  width: 1.0,
+                                ),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                  IconButton(
+                            icon: Icon(Icons.remove, size: 20),
+                            onPressed: () => _updateCount(serieIndex, -1),
+                  ),
+                  Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                "Assists", // Puedes cambiar este texto por lo que corresponda (ej. "Reps" para repeticiones)
+                                style: TextStyle(fontSize: 10),
+                              ),
+                              Container(
+                                width: 35,
+                                height: 35,
+                                child: TextField(
+                  controller: countControllers[serieIndex],
+                  keyboardType: TextInputType.number,
+                  textAlign: TextAlign.center,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: '0',
+                  ),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ],
+                  ),
+                  IconButton(
+                            icon: Icon(Icons.add, size: 20),
+                            onPressed: () => _updateCount(serieIndex, 1),
+                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                  
+                    ],
+                  ),
                 ),
               ),
 
