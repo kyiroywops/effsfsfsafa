@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:gymtrack/screens/widgets/itemgym_row_widget.dart';
+import 'package:gymtrack/screens/widgets/seriesgym_row_widget.dart';
 
 // Define la clase Exercise para manejar los datos de los ejercicios
 class Exercise {
@@ -123,8 +125,7 @@ fieldViewBuilder: (
     child: Stack(
       alignment: Alignment.centerLeft,
       children: [
-        TextField(
-  controller: textEditingController,
+        TextField(  controller: textEditingController,
   focusNode: focusNode,
   decoration: InputDecoration(
     border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
@@ -207,6 +208,9 @@ optionsViewBuilder: (
 ),
 
                           SizedBox(height: 20),
+                       // Dentro de tu widget, reemplaza el Row por un ListView horizontal
+GymItemRow(),
+SeriesWidget(),
                           ElevatedButton(
                             onPressed: () {
                               Navigator.of(context).pop();
@@ -236,3 +240,48 @@ optionsViewBuilder: (
   
 }
 
+
+
+class IconoConTexto extends StatefulWidget {
+  final String iconPath;
+  final String label;
+
+  const IconoConTexto({Key? key, required this.iconPath, required this.label}) : super(key: key);
+
+  @override
+  _IconoConTextoState createState() => _IconoConTextoState();
+}
+
+class _IconoConTextoState extends State<IconoConTexto> {
+  bool isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        // Acción al tocar el widget
+      },
+      onHover: (value) {
+        setState(() {
+          isHovered = value;
+        });
+      },
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: EdgeInsets.all(8), // Espacio alrededor del círculo
+            decoration: BoxDecoration(
+              color: isHovered ? Colors.blue.withOpacity(0.3) : Colors.transparent, // Color de fondo al pasar el cursor
+              shape: BoxShape.circle,
+            ),
+            child: ClipOval(
+              child: Image.asset(widget.iconPath, width: 20, height: 50),
+            ),
+          ),
+          Text(widget.label),
+        ],
+      ),
+    );
+  }
+}
