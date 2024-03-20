@@ -50,7 +50,10 @@ class _GymItemRowState extends State<GymItemRow> {
                     child: Image.asset(gymItem.iconPath), // Usa la imagen específica de cada elemento del gimnasio
                   ),
                   SizedBox(height: 5), // Agrega un poco de espacio entre el ícono y el texto
-                  Text(gymItem.name), // Usa el nombre específico de cada elemento del gimnasio
+                  Text(gymItem.name,
+                  style: TextStyle(
+                    color: isSelected ? Colors.brown : Colors.white,
+                  ),), // Usa el nombre específico de cada elemento del gimnasio
                 ],
               ),
             ),

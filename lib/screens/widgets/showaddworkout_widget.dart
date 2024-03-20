@@ -86,7 +86,7 @@ void initState() {
             builder: (_, controller) {
               return Container(
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade300.withOpacity(0.85),
+                  color: Colors.black.withOpacity(0.8),
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(12.0),
                     topRight: Radius.circular(12.0),
@@ -95,12 +95,42 @@ void initState() {
                 child: ListView(
                   controller: controller,
                   children: [
+                    
                     Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
-                           Text("Add quick exercise", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Colors.black, fontFamily: 'Geologica'),) ,
+                          Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Cancel", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: Colors.blue.shade700, fontFamily: 'Geologica')),
+                      
+                      Text("Add quick exercise", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: Colors.white, fontFamily: 'Geologica')),
+                      ElevatedButton(
+          onPressed: (
+          ) {
+            Navigator.pop(context);
+          }
+          ,
+          child: Text('Add', style: TextStyle(
+            fontFamily: 'Geologica',
+            fontWeight: FontWeight.w800,
+
+            fontSize: 12,
+            color: Colors.black,
+          ),),
+          
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(18.0),
+            ),
+          ),
+        ),
+                    ],
+                  ),
+
                 SizedBox(height: 20),
             Autocomplete<Exercise>( 
         key: autocompleteKey, // Usa la key que se reinicia con _clearSelection
@@ -121,38 +151,55 @@ fieldViewBuilder: (
   VoidCallback onFieldSubmitted
 ) {
   return Container(
-    height: 60.0, // Define la altura del contenedor del TextField.
-    child: Stack(
-      alignment: Alignment.centerLeft,
-      children: [
-        TextField(  controller: textEditingController,
-  focusNode: focusNode,
-  decoration: InputDecoration(
-    border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-    filled: true,
-    fillColor: Colors.white,
-    hintText: 'Escribe para buscar...',
-    prefixIcon: Icon(Icons.search),
-  ),
-  // El campo debe ser de solo lectura únicamente si hay una selección
-  readOnly: selectedExercise != null,
-),
-        // Coloca el Chip encima del TextField solo si hay una selección.
-        if (selectedExercise != null)
-          Padding(
-            padding: const EdgeInsets.fromLTRB(48.0, 8.0, 8.0, 8.0), // Ajustar los valores para posicionar correctamente el Chip.
-            child: Chip(
-              backgroundColor: Colors.grey[900],
-              deleteIconColor: Colors.white,
-              labelStyle: TextStyle(color: Colors.white),
-              label: Text(selectedExercise!.name),
-              avatar: Image.asset('assets/images/icons/${selectedExercise!.icon}', width: 24, height: 24),
-              onDeleted: _clearSelection,
-            ),
+  height: 60.0,
+  child: Stack(
+    alignment: Alignment.centerLeft,
+    children: [
+      TextField(
+        controller: textEditingController,
+        focusNode: focusNode,
+        decoration: InputDecoration(
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+          filled: true,
+          fillColor: Colors.white,
+          hintText: '', // Eliminamos el hintText del InputDecoration
+          prefixIcon: Icon(Icons.search),
+          contentPadding: EdgeInsets.only(left: 8.0), // Ajustamos el padding del contenido
+        ),
+        // El campo debe ser de solo lectura únicamente si hay una selección
+        readOnly: selectedExercise != null,
+      ),
+      // Texto de sugerencia en la esquina superior izquierda
+      Positioned(
+        left: 50.0,
+        top: 12.0,
+        child: Text(
+          'Name of the exercise',
+          style: TextStyle(
+            color: Colors.grey.shade600,
+            fontFamily: 'Geologica',
+            fontWeight: FontWeight.w400,
+
+            fontSize: 11.0, // Tamaño del texto de sugerencia
           ),
-      ],
-    ),
-  );
+        ),
+      ),
+      // Coloca el Chip encima del TextField solo si hay una selección
+      if (selectedExercise != null)
+        Padding(
+          padding: const EdgeInsets.fromLTRB(48.0, 8.0, 8.0, 8.0),
+          child: Chip(
+            backgroundColor: Colors.grey[900],
+            deleteIconColor: Colors.white,
+            labelStyle: TextStyle(color: Colors.white),
+            label: Text(selectedExercise!.name),
+            avatar: Image.asset('assets/images/icons/${selectedExercise!.icon}', width: 24, height: 24),
+            onDeleted: _clearSelection,
+          ),
+        ),
+    ],
+  ),
+);
 },
 optionsViewBuilder: (
   BuildContext context, 
@@ -211,21 +258,7 @@ optionsViewBuilder: (
                        // Dentro de tu widget, reemplaza el Row por un ListView horizontal
 GymItemRow(),
 SeriesWidget(),
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.black,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                            ),
-                            child: Text(
-                              "Añadir",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
+                         
                         ],
                       ),
                     ),

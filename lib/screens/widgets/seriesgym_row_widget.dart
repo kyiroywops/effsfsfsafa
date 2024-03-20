@@ -80,10 +80,14 @@ void _updateCount(int serieIndex, int delta) {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    Text('Serie ${serieIndex + 1} ', style: TextStyle(
-                      fontFamily: 'Geologica', fontWeight: FontWeight.w600
-                      
-                    ),),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('Set ${serieIndex + 1} ', style: TextStyle(
+                        fontFamily: 'Geologica', fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                        
+                      ),),
+                    ),
                     ...entry.value.asMap().entries.map((innerEntry) {
                       int index = innerEntry.key;
                       bool isActive = innerEntry.value;
@@ -135,7 +139,10 @@ void _updateCount(int serieIndex, int delta) {
                               child: Row(
                                 children: <Widget>[
                   IconButton(
-                            icon: Icon(Icons.remove, size: 10),
+                            icon: Icon(Icons.remove, size: 10,
+                            color:  Colors.white,
+                            
+                            ),
                             onPressed: () => _updateWeight(serieIndex, -1),
                                padding: EdgeInsets.zero, // Elimina padding adicional
                             constraints: BoxConstraints(minWidth: 10, minHeight: 10), // Menores restricciones
@@ -144,7 +151,12 @@ void _updateCount(int serieIndex, int delta) {
                             children: [
                               Text(
                                 "Weight",
-                                style: TextStyle(fontSize: 10),
+                                style: TextStyle(fontSize: 10
+                                ,
+                                fontFamily: 'Geologica',
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                                ),
                               ),
                               Container(
                                 width: 35,
@@ -158,13 +170,15 @@ void _updateCount(int serieIndex, int delta) {
                     border: InputBorder.none,
                     hintText: '0',
                   ),
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, fontFamily: 'Geologica', color: Colors.white),
                                 ),
                               ),
                             ],
                   ),
                   IconButton(
-                            icon: Icon(Icons.add, size: 20),
+                            icon: Icon(Icons.add, size: 20
+                            ,
+                            color:  Colors.white,),
                                padding: EdgeInsets.zero, // Elimina padding adicional
                             constraints: BoxConstraints(minWidth: 10, minHeight: 10), // Menores restricciones
                             
@@ -197,38 +211,42 @@ void _updateCount(int serieIndex, int delta) {
                                 // Icono a la izquierda
                                 Icon(
                                   Icons.chevron_left,
-                                  color: Colors.grey,
                                   size: 20.0,
+                                  color: Colors.white,
                                 ),
                                 // Espacio entre el icono y el texto
-                                SizedBox(width: 8.0),
+                                SizedBox(width: 4.0),
                                 // Columna para el texto "Medida" y el valor de la unidad
                                 Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Text(
-                                      "Medida", // Título encima del valor de la unidad
+                                      "Unit", // Título encima del valor de la unidad
                                       style: TextStyle(
                                         fontSize: 12.0,
-                                        color: Colors.grey,
+                                        fontWeight: FontWeight.w600,
+                                        fontFamily: 'Geologica',
+                                        color: Colors.white
+                                        
                                       ),
                                     ),
                                     Text(
                                       selectedUnit,
                                       style: TextStyle(
                                         fontSize: 16.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.grey,
+                                        fontWeight: FontWeight.w800,
+                                        fontFamily: 'Geologica',
+                                        color: Colors.white,
                                       ),
                                     ),
                                   ],
                                 ),
                                 // Espacio entre el texto y el icono
-                                SizedBox(width: 8.0),
+                                SizedBox(width: 4.0),
                                 // Icono a la derecha
                                 Icon(
                                   Icons.chevron_right,
-                                  color: Colors.grey,
+                                  color: Colors.white,
                                   size: 20.0,
                                 ),
                               ],
@@ -258,7 +276,8 @@ void _updateCount(int serieIndex, int delta) {
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
                   IconButton(
-                            icon: Icon(Icons.remove, size: 20),
+                            icon: Icon(Icons.remove, size: 20, 
+                            color:  Colors.white),
                             onPressed: () => _updateCount(serieIndex, -1),
                   ),
                   Column(
@@ -266,7 +285,10 @@ void _updateCount(int serieIndex, int delta) {
                             children: [
                               Text(
                                 "Assists", // Puedes cambiar este texto por lo que corresponda (ej. "Reps" para repeticiones)
-                                style: TextStyle(fontSize: 10),
+                                style: TextStyle(fontSize: 10,
+                                fontFamily: 'Geologica',
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,),
                               ),
                               Container(
                                 width: 35,
@@ -279,13 +301,13 @@ void _updateCount(int serieIndex, int delta) {
                     border: InputBorder.none,
                     hintText: '0',
                   ),
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, fontFamily: 'Geologica', color: Colors.white),
                                 ),
                               ),
                             ],
                   ),
                   IconButton(
-                            icon: Icon(Icons.add, size: 20),
+                            icon: Icon(Icons.add, size: 20, color: Colors.white,),
                             onPressed: () => _updateCount(serieIndex, 1),
                   ),
                                 ],
@@ -304,9 +326,15 @@ void _updateCount(int serieIndex, int delta) {
         
         ElevatedButton(
           onPressed: _addSerie,
-          child: Icon(Icons.add),
+          child: Text('Add set', style: TextStyle(
+            fontFamily: 'Geologica',
+            fontWeight: FontWeight.w800,
+            fontSize: 12,
+            color: Colors.black,
+          ),),
+          
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.blue,
+            backgroundColor: Colors.white,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(18.0),
             ),
