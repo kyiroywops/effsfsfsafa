@@ -191,7 +191,10 @@ fieldViewBuilder: (
           child: Chip(
             backgroundColor: Colors.grey[900],
             deleteIconColor: Colors.white,
-            labelStyle: TextStyle(color: Colors.white),
+            labelStyle: TextStyle(color: Colors.white,
+            fontFamily: 'Geologica',
+            fontWeight: FontWeight.w600,
+            ),
             label: Text(selectedExercise!.name),
             avatar: Image.asset('assets/images/icons/${selectedExercise!.icon}', width: 24, height: 24),
             onDeleted: _clearSelection,
@@ -232,7 +235,10 @@ optionsViewBuilder: (
                 child: ListTile(
                   title: Text(
                     option.name,
-                    style: TextStyle(color: Colors.white), // Texto claro
+                    style: TextStyle(color: Colors.white,
+                    fontFamily: 'Geologica',
+                    fontWeight: FontWeight.w600,
+                    ), // Texto claro
                   ),
                   leading: Image.asset('assets/images/icons/${option.icon}', width: 30, height: 30),
                 ),
