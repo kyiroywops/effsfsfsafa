@@ -127,6 +127,7 @@ void _updateCount(int serieIndex, int delta) {
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Container(
+                              height: 65,
                               
                               
                               decoration: BoxDecoration(
@@ -149,17 +150,20 @@ void _updateCount(int serieIndex, int delta) {
                   ),
                   Column(
                             children: [
-                              Text(
-                                "Weight",
-                                style: TextStyle(fontSize: 10
-                                ,
-                                fontFamily: 'Geologica',
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
+                              Padding(
+                                padding: const EdgeInsets.only(top:12),
+                                child: Text(
+                                  "Weight",
+                                  style: TextStyle(fontSize: 10
+                                  ,
+                                  fontFamily: 'Geologica',
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                  ),
                                 ),
                               ),
                               Container(
-                                width: 35,
+                                width: 45,
                                 height: 35, // Altura fija para el TextField
                                 child: TextField(
                   textAlign: TextAlign.center,
@@ -283,12 +287,15 @@ void _updateCount(int serieIndex, int delta) {
                   Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(
-                                "Assists", // Puedes cambiar este texto por lo que corresponda (ej. "Reps" para repeticiones)
-                                style: TextStyle(fontSize: 10,
-                                fontFamily: 'Geologica',
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,),
+                              Padding(
+                                padding: const EdgeInsets.only(top:15),
+                                child: Text(
+                                  "Assists", // Puedes cambiar este texto por lo que corresponda (ej. "Reps" para repeticiones)
+                                  style: TextStyle(fontSize: 10,
+                                  fontFamily: 'Geologica',
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,),
+                                ),
                               ),
                               Container(
                                 width: 35,
