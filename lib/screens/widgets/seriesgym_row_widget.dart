@@ -474,18 +474,7 @@ void _updateCount(int serieIndex, int delta) {
             ),
           ),
         ),
-        ElevatedButton(
-  onPressed: () {
-    final sets = ref.read(exerciseSetProvider);
-    for (var set in sets) {
-      print("Reps: ${set.reps}, Weight: ${set.weight}, Unit: ${set.unit}, Assists: ${set.assists}");
-    }
-  },
-  child: Text('Print Sets Data'),
-  style: ElevatedButton.styleFrom(
-    backgroundColor: Colors.blue, // Define el color del botón aquí si lo deseas
-  ),
-),
+       
       ],
     );
   }
