@@ -8,80 +8,53 @@ final exerciseSetProvider = StateNotifierProvider<ExerciseSetListNotifier, List<
 });
 
 class ExerciseSet {
-  final int reps;
-  final int weight;
-  final String unit;
-  final int assists;
-
+  int reps;
+  int weight;
+  String unit;
+  int assists;
+  TextEditingController repsController;
+  TextEditingController weightController;
+  
   ExerciseSet({
     required this.reps, 
     required this.weight, 
     required this.unit, 
     required this.assists,
+    required this.repsController,
+    required this.weightController,
   });
-
-  ExerciseSet copyWith({
-    int? reps,
-    int? weight,
-    String? unit,
-    int? assists,
-  }) {
-    return ExerciseSet(
-      reps: reps ?? this.reps,
-      weight: weight ?? this.weight,
-      unit: unit ?? this.unit,
-      assists: assists ?? this.assists,
-    );
-  }
 }
 
 class ExerciseSetListNotifier extends StateNotifier<List<ExerciseSet>> {
-  ExerciseSetListNotifier() : super([ExerciseSet(reps: 0, weight: 0, unit: 'KG', assists: 0)]);
-
-
-  
-
-  void updateReps(int index, int reps) {
-  if (index >= 0 && index < state.length) {
-    var set = state[index];
-    state = [
-      ...state.sublist(0, index),
-      ExerciseSet(
-        reps: reps,
-        weight: set.weight,
-        unit: set.unit,
-        assists: set.assists,
-      ),
-      ...state.sublist(index + 1),
-    ];
-  }
-}
-
+  ExerciseSetListNotifier(): super([]);
 
   void addSet() {
+    TextEditingController repsController = TextEditingController();
+    TextEditingController weightController = TextEditingController();
     state = [
       ...state,
-      ExerciseSet(reps: 0, weight: 0, unit: 'KG', assists: 0)
+      ExerciseSet(reps: 0, weight: 0, unit: 'KG', assists: 0, repsController: repsController, weightController: weightController)
     ];
   }
 
-void updateSet(int index, ExerciseSet updatedSet) {
-  if (index >= 0 && index < state.length) {
-    var newSet = state[index].copyWith(
-      reps: updatedSet.reps,
-      weight: updatedSet.weight,
-      unit: updatedSet.unit,
-      assists: updatedSet.assists,
-    );
-    state = [
-      ...state.sublist(0, index),
-      newSet,
-      ...state.sublist(index + 1),
-    ];
+  void updateSet(int index, {int? reps, int? weight, String? unit, int? assists}) {
+    // Encuentra la serie actual y actualiza los valores
+    var currentSet = state[index];
+    if(reps != null) {
+      currentSet.reps = reps;
+      currentSet.repsController.text = reps.toString(); // Asegúrate de actualizar también el controlador
+    }
+    if(weight != null) {
+      currentSet.weight = weight;
+      currentSet.weightController.text = weight.toString(); // Asegúrate de actualizar también el controlador
+    }
+    if(unit != null) currentSet.unit = unit;
+    if(assists != null) currentSet.assists = assists;
+
+    // Actualiza el estado con la nueva lista modificada
+    state = [...state];
   }
 }
-}
-
 
 class SeriesWidget extends ConsumerStatefulWidget {
   @override
@@ -111,75 +84,49 @@ List<bool> isSelectedList = [false]; // Comienza con un elemento para la serie i
  @override
 void initState() {
   super.initState();
-
-  var initialSet = ref.read(exerciseSetProvider.notifier).state.first;
-  
-  weights = [initialSet.weight]; // Inicializa con el peso del primer set
-  counts = [initialSet.assists]; // Inicializa con las asistencias del primer set
-  series = [List<bool>.filled(20, false)]; // Inicializa la serie con todos falsos
-  
-  // Crea controladores de texto para el peso y las asistencias del primer set
   weightControllers.add(TextEditingController(text: weights[0].toString()));
-  countControllers.add(TextEditingController(text: counts[0].toString()));
+  countControllers.add(TextEditingController(text: counts[0].toString())); // Nuevo controlador para el contador
 }
   
 
   void _handleTap(int serieIndex, int index) {
-  setState(() {
-    for (int i = 0; i <= index; i++) {
-      series[serieIndex][i] = true;
-    }
-    for (int i = index + 1; i < series[serieIndex].length; i++) {
-      series[serieIndex][i] = false;
-    }
-  });
-  // Aquí actualizamos las repeticiones en el estado de Riverpod.
-  ref.read(exerciseSetProvider.notifier).updateReps(serieIndex, index + 1);
-}
+    setState(() {
+      for (int i = 0; i <= index; i++) {
+        series[serieIndex][i] = true;
+      }
+      for (int i = index + 1; i < series[serieIndex].length; i++) {
+        series[serieIndex][i] = false;
+      }
+    });
+  }
 
 // Actualiza _addSerie para manejar el nuevo estado de selección para la serie agregada
 void _addSerie() {
-  // Lógica existente para actualizar la UI
   setState(() {
     series.add(List<bool>.filled(20, false));
     weights.add(0);
     counts.add(0);
-    isSelectedList.add(false);
-    
-    weightControllers.add(TextEditingController());
-    countControllers.add(TextEditingController());
+    isSelectedList.add(false); // Añadir estado de selección por defecto para la nueva serie
+
+    weightControllers.add(TextEditingController(text: weights.last.toString()));
+    countControllers.add(TextEditingController(text: counts.last.toString()));
   });
-   ref.read(exerciseSetProvider.notifier).addSet();
-
+  
 }
 
 
-void _updateWeight(int serieIndex, int delta) {
-  var currentSets = ref.read(exerciseSetProvider);
-  if (serieIndex < currentSets.length) {
-    var currentSet = currentSets[serieIndex];
-    int newWeight = (currentSet.weight + delta).clamp(0, 999);
-    ref.read(exerciseSetProvider.notifier).updateSet(
-      serieIndex, 
-      currentSet.copyWith(weight: newWeight)
-    );
-    // Actualizar el controlador de texto si es necesario
-    weightControllers[serieIndex].text = newWeight.toString();
-  }
-}
-void _updateCount(int serieIndex, int delta) {
-  var currentSets = ref.read(exerciseSetProvider);
-  if (serieIndex < currentSets.length) {
-    int newCount = (counts[serieIndex] + delta).clamp(0, 20);
+  void _updateWeight(int serieIndex, int delta) {
     setState(() {
-      counts[serieIndex] = newCount;
-      countControllers[serieIndex].text = newCount.toString();
+      weights[serieIndex] = (weights[serieIndex] + delta).clamp(0, 999);
+      weightControllers[serieIndex].text = weights[serieIndex].toString();
     });
-    ref.read(exerciseSetProvider.notifier).updateSet(
-      serieIndex, 
-      currentSets[serieIndex].copyWith(assists: newCount)
-    );
   }
+
+void _updateCount(int serieIndex, int delta) {
+  setState(() {
+    counts[serieIndex] = (counts[serieIndex] + delta).clamp(0, 20); // Asumiendo un máximo de 20
+    countControllers[serieIndex].text = counts[serieIndex].toString();
+  });
 }
  @override
   Widget build(BuildContext context) {
@@ -311,19 +258,12 @@ void _updateCount(int serieIndex, int delta) {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: InkWell(
-                        onTap: () {
-                          String newUnit = selectedUnit == 'KG' ? 'LB' : 'KG';
-                          setState(() {
-                            selectedUnit = newUnit;
-                          });
-                          for (int i = 0; i < ref.read(exerciseSetProvider).length; i++) {
-                            // Aquí actualizamos cada set con la nueva unidad
-                            var currentSet = ref.read(exerciseSetProvider)[i];
-                            ref.read(exerciseSetProvider.notifier).updateSet(i, 
-                              currentSet.copyWith(unit: newUnit)
-                            );
-                          }
-                        },
+                          onTap: () {
+                            setState(() {
+                              // Cambia entre KG y LB cuando se toca
+                              selectedUnit = (selectedUnit == 'KG') ? 'LB' : 'KG';
+                            });
+                          },
                           child: Container(
                             padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
                             decoration: BoxDecoration(
@@ -454,12 +394,7 @@ void _updateCount(int serieIndex, int delta) {
         }).toList(),
         
         ElevatedButton(
-          onPressed: () {
-            // Cuando se presiona el botón, agregas un nuevo set utilizando Riverpod
-            ref.read(exerciseSetProvider.notifier).addSet();
-            // Además, agregas la lógica de la UI para actualizar la interfaz de usuario localmente
-            _addSerie();
-          },
+          onPressed: _addSerie,
           child: Text('Add set', style: TextStyle(
             fontFamily: 'Geologica',
             fontWeight: FontWeight.w800,
@@ -474,18 +409,6 @@ void _updateCount(int serieIndex, int delta) {
             ),
           ),
         ),
-        ElevatedButton(
-  onPressed: () {
-    final sets = ref.read(exerciseSetProvider);
-    for (var set in sets) {
-      print("Reps: ${set.reps}, Weight: ${set.weight}, Unit: ${set.unit}, Assists: ${set.assists}");
-    }
-  },
-  child: Text('Print Sets Data'),
-  style: ElevatedButton.styleFrom(
-    backgroundColor: Colors.blue, // Define el color del botón aquí si lo deseas
-  ),
-),
       ],
     );
   }

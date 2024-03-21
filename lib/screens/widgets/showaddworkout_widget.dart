@@ -262,8 +262,8 @@ optionsViewBuilder: (
 
                           SizedBox(height: 20),
                        // Dentro de tu widget, reemplaza el Row por un ListView horizontal
-GymItemRow(),
-SeriesWidget(),
+                          GymItemRow(),
+                          SeriesWidget(),
                          
                         ],
                       ),
