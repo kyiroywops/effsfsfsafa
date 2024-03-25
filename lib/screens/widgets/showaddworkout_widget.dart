@@ -4,21 +4,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymtrack/infrastructure/models/exercises_models.dart';
+import 'package:gymtrack/infrastructure/models/exercises_setmodels.dart';
+import 'package:gymtrack/screens/providers/selectedgymitem_provider.dart';
 import 'package:gymtrack/screens/widgets/itemgym_row_widget.dart';
 import 'package:gymtrack/screens/widgets/seriesgym_row_widget.dart';
 
 // Define la clase Exercise para manejar los datos de los ejercicios
-class Exercise {
-  final String name;
-  final String icon;
-  Exercise({required this.name, required this.icon});
-  factory Exercise.fromJson(Map<String, dynamic> json) {
-    return Exercise(
-      name: json['name'],
-      icon: json['icon'],
-    );
-  }
-}
 
 void showAddWorkoutBottomSheet(BuildContext context) {
   showModalBottomSheet(
@@ -54,7 +46,7 @@ class _AddWorkoutBottomSheetState extends ConsumerState<AddWorkoutBottomSheet> {
     });
   }
 
-  Future<List<Exercise>> _loadExercises() async {
+ Future<List<Exercise>> _loadExercises() async {
     final jsonString =
         await rootBundle.loadString('assets/jsons/exercises.json');
     final jsonResponse = json.decode(jsonString) as List;
@@ -101,7 +93,7 @@ class _AddWorkoutBottomSheetState extends ConsumerState<AddWorkoutBottomSheet> {
       await exercises.add({
         'userId': user.uid, // Agrega el ID del usuario
         'exerciseName': selectedExercise.name,
-        'exerciseIcon': selectedExercise.icon,
+        'exerciseIcon': selectedExercise.exerciseIcon,
         'gymItemName': selectedGymItem.name,
         'gymItemIconPath': selectedGymItem.iconPath,
         'sets': firestoreSets,
@@ -190,19 +182,21 @@ class _AddWorkoutBottomSheetState extends ConsumerState<AddWorkoutBottomSheet> {
                             key:
                                 autocompleteKey, // Usa la key que se reinicia con _clearSelection
 
-                            optionsBuilder:
-                                (TextEditingValue textEditingValue) {
-                              if (textEditingValue.text.isEmpty) {
-                                return exercises ??
-                                    const Iterable<
-                                        Exercise>.empty(); // Retorna todas las opciones si no hay texto ingresado
-                              } else {
-                                return exercises!.where((Exercise option) {
-                                  return option.name.toLowerCase().contains(
-                                      textEditingValue.text.toLowerCase());
-                                });
-                              }
-                            },
+                          optionsBuilder: (TextEditingValue textEditingValue) {
+  print("Búsqueda de texto: '${textEditingValue.text}'"); // Impresión de depuración
+
+  if (textEditingValue.text.isEmpty) {
+    print("Mostrando todos los ejercicios");
+    return exercises ?? const Iterable<Exercise>.empty();
+  } else {
+    final filteredExercises = exercises!.where((Exercise option) {
+      final match = option.name.toLowerCase().contains(textEditingValue.text.toLowerCase());
+      print("Filtrado por '${option.name}': $match"); // Impresión de depuración
+      return match;
+    });
+    return filteredExercises;
+  }
+},
                             fieldViewBuilder: (BuildContext context,
                                 TextEditingController textEditingController,
                                 FocusNode focusNode,
@@ -262,7 +256,7 @@ class _AddWorkoutBottomSheetState extends ConsumerState<AddWorkoutBottomSheet> {
                                           ),
                                           label: Text(selectedExercise!.name),
                                           avatar: Image.asset(
-                                              'assets/images/icons/${selectedExercise!.icon}',
+                                              'assets/images/icons/${selectedExercise!.exerciseIcon}',
                                               width: 24,
                                               height: 24),
                                           onDeleted: _clearSelection,
@@ -319,7 +313,7 @@ class _AddWorkoutBottomSheetState extends ConsumerState<AddWorkoutBottomSheet> {
                                                         ), // Texto claro
                                                       ),
                                                       leading: Image.asset(
-                                                          'assets/images/icons/${option.icon}',
+                                                          'assets/images/icons/${option.exerciseIcon}',
                                                           width: 30,
                                                           height: 30),
                                                     ),

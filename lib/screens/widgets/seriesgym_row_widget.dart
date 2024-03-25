@@ -2,38 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymtrack/infrastructure/models/exercises_setmodels.dart';
 
 final exerciseSetProvider = StateNotifierProvider<ExerciseSetListNotifier, List<ExerciseSet>>((ref) {
   return ExerciseSetListNotifier();
 });
 
-class ExerciseSet {
-  final int reps;
-  final int weight;
-  final String unit;
-  final int assists;
 
-  ExerciseSet({
-    required this.reps, 
-    required this.weight, 
-    required this.unit, 
-    required this.assists,
-  });
-
-  ExerciseSet copyWith({
-    int? reps,
-    int? weight,
-    String? unit,
-    int? assists,
-  }) {
-    return ExerciseSet(
-      reps: reps ?? this.reps,
-      weight: weight ?? this.weight,
-      unit: unit ?? this.unit,
-      assists: assists ?? this.assists,
-    );
-  }
-}
 
 class ExerciseSetListNotifier extends StateNotifier<List<ExerciseSet>> {
   ExerciseSetListNotifier() : super([ExerciseSet(reps: 0, weight: 0, unit: 'KG', assists: 0)]);

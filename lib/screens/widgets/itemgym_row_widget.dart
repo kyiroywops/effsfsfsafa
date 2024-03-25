@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymtrack/infrastructure/models/gym_item_model.dart';
+import 'package:gymtrack/screens/providers/selectedgymitem_provider.dart';
 
-final selectedGymItemProvider = StateProvider<GymItem?>((ref) {
-  return null; // Valor inicial, ningún ítem seleccionado.
-});
 
-class GymItem {
-  final String name;
-  final String iconPath;
-
-  GymItem({required this.name, required this.iconPath});
-}
 
 // Cambia a ConsumerStatefulWidget
 class GymItemRow extends ConsumerStatefulWidget {
