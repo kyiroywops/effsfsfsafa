@@ -19,42 +19,25 @@ Future<List<DailyWorkout>> getExercisesGroupedByDate() async {
 
   Map<DateTime, List<Exercise>> exercisesByDate = {};
   for (var doc in querySnapshot.docs) {
-    
     var data = doc.data() as Map<String, dynamic>;
-     print('Datos del ejercicio: $data');
-    List<ExerciseSet> sets = (data['sets'] as List).map((set) => ExerciseSet.fromJson(set)).toList();
-    GymItem gymItem = GymItem.fromJson(data['gymItem']); // Asegúrate de tener esta estructura en tus datos
-    
-    Exercise exercise = Exercise(
-      name: data['exerciseName'],
-      exerciseIcon: data['exerciseIcon'],
-      gymItem: gymItem,
-      sets: sets,
-      timestamp: (data['timestamp'] as Timestamp).toDate(), // Convierte Timestamp a DateTime
+    Exercise exercise = Exercise.fromFirestore(data);
 
+    DateTime date = DateTime(
+      exercise.timestamp!.year,
+      exercise.timestamp!.month,
+      exercise.timestamp!.day,
     );
 
-    // Extrae solo la fecha del timestamp del ejercicio para la agrupación
-      DateTime date = DateTime(
-        exercise.timestamp!.year,
-        exercise.timestamp!.month,
-        exercise.timestamp!.day,
-      );
-
-    // Agrupa los ejercicios por la fecha normalizada
-  if (!exercisesByDate.containsKey(date)) {
-    exercisesByDate[date] = [];
+    if (!exercisesByDate.containsKey(date)) {
+      exercisesByDate[date] = [];
+    }
+    exercisesByDate[date]!.add(exercise);
   }
-  exercisesByDate[date]!.add(exercise);
-}
-
 
   return exercisesByDate.entries
       .map((entry) => DailyWorkout(date: entry.key, exercises: entry.value))
       .toList();
 }
-
-
 class DailyWorkout {
   final DateTime date;
   final List<Exercise> exercises;
@@ -71,7 +54,6 @@ class HomeScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            // ... Resto del código ...
 
             // Se reemplaza el Expanded con FutureBuilder
             Expanded(

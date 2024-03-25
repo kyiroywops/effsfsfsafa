@@ -27,19 +27,27 @@ class Exercise {
     );
   }
 
-  factory Exercise.fromFirestore(Map<String, dynamic> data) {
-    var sets = (data['sets'] as List).map((set) => ExerciseSet.fromJson(set)).toList();
-    var gymItem = GymItem.fromJson(data['gymItem']);
+ factory Exercise.fromFirestore(Map<String, dynamic> data) {
+  List<ExerciseSet> sets = data['sets'] != null
+      ? (data['sets'] as List).map((set) => ExerciseSet.fromJson(set)).toList()
+      : []; // Asegúrate de manejar `null` aquí.
 
-    return Exercise(
-      name: data['exerciseName'],
-      exerciseIcon: data['exerciseIcon'],
-      gymItem: gymItem,
-      sets: sets,
-      timestamp: (data['timestamp'] as Timestamp).toDate(),
-    );
-  }
+  // Necesitas decidir cómo manejarás gymItem si gymItemName y gymItemIconPath están separados.
+  GymItem gymItem = GymItem(
+    name: data['gymItemName'] ?? 'Default',
+    iconPath: data['gymItemIconPath'] ?? 'default_icon.png',
+  );
 
+  return Exercise(
+    name: data['exerciseName'] ?? 'Default Name',
+    exerciseIcon: data['exerciseIcon'] ?? 'default_icon.png',
+    gymItem: gymItem,
+    sets: sets,
+    timestamp: data['timestamp'] != null
+        ? (data['timestamp'] as Timestamp).toDate()
+        : null, // Manejo de posible `null`.
+  );
+}
   Map<String, dynamic> toJson() {
     return {
       'exerciseName': name,
