@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+class StatsScreen extends StatelessWidget {
+  const StatsScreen({Key? key}) : super(key: key);
+
+    bool hasWorkout(DateTime date) {
+    // Aquí debes implementar tu lógica para saber si hay un entrenamiento
+    // Por ejemplo, puedes comprobar si en tu base de datos hay un registro para `date`.
+    // La siguiente línea es solo un marcador de posición y siempre devuelve falso.
+    // Deberás reemplazarlo con tu lógica real de comprobación.
+    return false;
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -33,13 +42,6 @@ class ProfileScreen extends StatelessWidget {
                       'assets/images/logo.png', // Reemplaza con la ruta de tu logo.
                       height: 50, // Ajusta la altura según sea necesario.
                     ),
-          IconButton(
-            icon: Icon(Icons.exit_to_app, color: Colors.white),
-            onPressed: () async {
-              await FirebaseAuth.instance.signOut();
-              context.go('/login'); // Usando GoRouter para navegar.
-            },
-          ),
                    
                   ],
                 ),
@@ -50,7 +52,7 @@ class ProfileScreen extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'Profile', // Título de la pantalla
+                    'My stats', // Título de la pantalla
                     style: TextStyle(
                       fontFamily: 'Geologica',
                       color: Colors.white,

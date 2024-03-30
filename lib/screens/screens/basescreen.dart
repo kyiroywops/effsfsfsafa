@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:gymtrack/screens/screens/calendar_page.dart';
 import 'package:gymtrack/screens/screens/home_page.dart';
 import 'package:gymtrack/screens/screens/profile_page.dart';
+import 'package:gymtrack/screens/screens/stats_page.dart';
 import 'package:gymtrack/screens/widgets/showaddworkout_widget.dart';
 
 class BaseScreen extends StatefulWidget {
@@ -12,9 +14,9 @@ class _BaseScreenState extends State<BaseScreen> {
   int _selectedIndex = 0;
   static const List<Widget> _widgetOptions = <Widget>[
     HomeScreen(), // Historial
-    Text('Historial', textAlign: TextAlign.center), // Historial
+    CalendarScreen(),
     Text('Calendario', textAlign: TextAlign.center), // Calendario
-    Text('Estadísticas', textAlign: TextAlign.center), // Estadísticas
+    StatsScreen(),
     ProfileScreen(), // Perfil
   ];
 
@@ -35,15 +37,15 @@ class _BaseScreenState extends State<BaseScreen> {
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomAppBar(
-        color: Colors.black,
+        color: Color.fromARGB(255, 13, 11, 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             _buildNavItem(Icons.book, 'Historial', 0),
-            _buildNavItem(Icons.calendar_today, 'Calendario', 1),
+            _buildNavItem(Icons.calendar_today, 'Calendar', 1),
             _buildUploadNavItem(), // Botón central con ícono relleno siempre visible
-            _buildNavItem(Icons.bar_chart, 'Estadísticas', 3),
-            _buildNavItem(Icons.person, 'Perfil', 4),
+            _buildNavItem(Icons.bar_chart, 'Stats', 3),
+            _buildNavItem(Icons.person, 'Profile', 4),
           ],
         ),
       ),
@@ -95,7 +97,7 @@ class _BaseScreenState extends State<BaseScreen> {
             ),
             child: Icon(Icons.add, size: 24, color: Colors.black), // Ícono negro siempre visible
           ),
-          Text('Subir', style: TextStyle(color: Colors.white, fontSize: 10)), // Texto siempre visible
+          Text('Training', style: TextStyle(color: Colors.white, fontSize: 10)), // Texto siempre visible
         ],
       ),
     ),

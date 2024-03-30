@@ -130,7 +130,7 @@ class _AddWorkoutBottomSheetState extends ConsumerState<AddWorkoutBottomSheet> {
             builder: (_, controller) {
               return Container(
                 decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.8),
+                  color: const Color.fromARGB(255, 17, 12, 12).withOpacity(0.8),
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(12.0),
                     topRight: Radius.circular(12.0),
