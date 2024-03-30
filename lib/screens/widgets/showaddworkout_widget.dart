@@ -78,7 +78,7 @@ class _AddWorkoutBottomSheetState extends ConsumerState<AddWorkoutBottomSheet> {
           .where((set) => set.reps != 0 || set.weight != 0 || set.assists != 0)
           .toList();
 
-      List<Map<String, dynamic>> firestoreSets = validSets.map((set) {
+    List<Map<String, dynamic>> firestoreSets = validSets.map((set) {
         return {
           'reps': set.reps,
           'weight': set.weight,
@@ -87,6 +87,7 @@ class _AddWorkoutBottomSheetState extends ConsumerState<AddWorkoutBottomSheet> {
         };
       }).toList();
 
+    
       CollectionReference exercises =
           FirebaseFirestore.instance.collection('exercises');
 
