@@ -8,6 +8,8 @@ class Exercise {
   final GymItem gymItem;
   final List<ExerciseSet> sets;
   final DateTime? timestamp;
+  final int recordSetWeightLowReps; // Añade esta línea para el nuevo campo
+
 
   Exercise({
     required this.name,
@@ -15,6 +17,8 @@ class Exercise {
     required this.gymItem,
     required this.sets,
     this.timestamp,
+    this.recordSetWeightLowReps = 0, // Valor predeterminado para el nuevo campo
+
   });
 
   factory Exercise.fromJson(Map<String, dynamic> json) {
@@ -24,6 +28,9 @@ class Exercise {
       gymItem: GymItem(name: 'Default', iconPath: 'default_icon.png'), // Establece valores predeterminados o ajusta según sea necesario
       sets: [], // Establece valores predeterminados o ajusta según sea necesario
       timestamp: null, // Establece valores predeterminados o ajusta según sea necesario
+      recordSetWeightLowReps: json['recordSetWeightLowReps'] as int? ?? 0,
+
+
     );
   }
 
@@ -45,7 +52,9 @@ class Exercise {
     sets: sets,
     timestamp: data['timestamp'] != null
         ? (data['timestamp'] as Timestamp).toDate()
-        : null, // Manejo de posible `null`.
+        : null, // Manejo de posible `null`.,
+    recordSetWeightLowReps: data['recordSetWeightLowReps'] as int? ?? 0,
+
   );
 }
   Map<String, dynamic> toJson() {
@@ -55,6 +64,8 @@ class Exercise {
       'gymItem': gymItem.toJson(),
       'sets': sets.map((set) => set.toJson()).toList(),
       'timestamp': timestamp?.toIso8601String(),
+      'recordSetWeightLowReps': recordSetWeightLowReps, // Asegúrate de incluir el campo al convertir a JSON
+
     };
   }
 }

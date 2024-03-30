@@ -67,47 +67,56 @@ class _AddWorkoutBottomSheetState extends ConsumerState<AddWorkoutBottomSheet> {
     });
   }
 
-  void _addExerciseToFirestore(WidgetRef ref, Exercise selectedExercise) async {
-    final FirebaseAuth auth = FirebaseAuth.instance;
-    final User? user = auth.currentUser; // Obtiene el usuario actual
-    final selectedGymItem = ref.read(selectedGymItemProvider.state).state;
+ void _addExerciseToFirestore(WidgetRef ref, Exercise selectedExercise) async {
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  final User? user = auth.currentUser; // Obtiene el usuario actual
+  final selectedGymItem = ref.read(selectedGymItemProvider.state).state;
 
-    if (selectedGymItem != null && user != null) {
-      List<ExerciseSet> sets = ref.read(exerciseSetProvider);
-      List<ExerciseSet> validSets = sets
-          .where((set) => set.reps != 0 || set.weight != 0 || set.assists != 0)
-          .toList();
+  if (selectedGymItem != null && user != null) {
+    List<ExerciseSet> sets = ref.read(exerciseSetProvider);
+    List<ExerciseSet> validSets = sets
+        .where((set) => set.reps != 0 || set.weight != 0 || set.assists != 0)
+        .toList();
+
+    int recordSetWeight = validSets
+        .where((set) => set.reps >= 6)
+        .fold<int>(0, (max, set) => set.weight > max ? set.weight : max);
+
+    int recordSetWeightLowReps = validSets
+        .where((set) => set.reps < 6)
+        .fold<int>(0, (max, set) => set.weight > max ? set.weight : max);
 
     List<Map<String, dynamic>> firestoreSets = validSets.map((set) {
-        return {
-          'reps': set.reps,
-          'weight': set.weight,
-          'unit': set.unit,
-          'assists': set.assists,
-        };
-      }).toList();
+      return {
+        'reps': set.reps,
+        'weight': set.weight,
+        'unit': set.unit,
+        'assists': set.assists,
+      };
+    }).toList();
 
-    
-      CollectionReference exercises =
-          FirebaseFirestore.instance.collection('exercises');
+    CollectionReference exercises =
+        FirebaseFirestore.instance.collection('exercises');
 
-      await exercises.add({
-        'userId': user.uid, // Agrega el ID del usuario
-        'exerciseName': selectedExercise.name,
-        'exerciseIcon': selectedExercise.exerciseIcon,
-        'gymItemName': selectedGymItem.name,
-        'gymItemIconPath': selectedGymItem.iconPath,
-        'sets': firestoreSets,
-        'timestamp': FieldValue.serverTimestamp(), // Agrega la fecha actual
-      }).then((documentReference) {
-        print("Exercise Added with ID: ${documentReference.id}");
-      }).catchError((e) {
-        print("Error adding document: $e");
-      });
-    } else {
-      print("No exercise or gym item selected or user is not logged in.");
-    }
+    await exercises.add({
+      'userId': user.uid, // Agrega el ID del usuario
+      'exerciseName': selectedExercise.name,
+      'exerciseIcon': selectedExercise.exerciseIcon,
+      'gymItemName': selectedGymItem.name,
+      'gymItemIconPath': selectedGymItem.iconPath,
+      'sets': firestoreSets,
+      'recordSetWeight': recordSetWeight,
+      'recordSetWeightLowReps': recordSetWeightLowReps,
+      'timestamp': FieldValue.serverTimestamp(), // Agrega la fecha actual
+    }).then((documentReference) {
+      print("Exercise Added with ID: ${documentReference.id}");
+    }).catchError((e) {
+      print("Error adding document: $e");
+    });
+  } else {
+    print("No exercise or gym item selected or user is not logged in.");
   }
+}
 
   @override
   Widget build(BuildContext context) {

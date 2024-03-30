@@ -87,7 +87,7 @@ class HomeScreen extends StatelessWidget {
                     ];
                     // Crea un listado de Widgets para los ejercicios del día
                     exerciseWidgets.addAll(dailyWorkout.exercises.map((exercise) {
-                      return buildExerciseCard(exercise, exercise.gymItem); // Asume que tienes una propiedad gymItemName en Exercise
+                      return buildExerciseCard(exercise, exercise.gymItem,  exercise.recordSetWeightLowReps); // Asume que tienes una propiedad gymItemName en Exercise
                     }).toList());
 
 
@@ -123,7 +123,7 @@ extension StringExtension on String {
 }
 
 
-Widget buildExerciseCard(Exercise exercise, GymItem gymItem) {
+Widget buildExerciseCard(Exercise exercise, GymItem gymItem, int recordSetWeightLowReps) {
   try {
       print('Construyendo tarjeta para: ${exercise.name}'); // Imprimir para verificar que se entre aquí
 
@@ -161,6 +161,10 @@ Widget buildExerciseCard(Exercise exercise, GymItem gymItem) {
                   ],
                 ),
               ),
+               Text(
+                        recordSetWeightLowReps.toString(), // Muestra el valor de recordSetWeightLowReps
+                        style: const TextStyle(color: Colors.green, fontSize: 30, fontFamily: 'Geologica', fontWeight: FontWeight.w900),
+                      ),
               // Puedes añadir más widgets aquí si necesitas mostrar más información en la tarjeta
             ],
           ),
