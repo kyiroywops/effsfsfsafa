@@ -11,7 +11,7 @@ final exerciseSetProvider =
 
 class ExerciseSetListNotifier extends StateNotifier<List<ExerciseSet>> {
   ExerciseSetListNotifier()
-      : super([ExerciseSet(reps: 0, weight: 0, unit: 'KG', assists: 0)]);
+      : super([ExerciseSet(reps: 0, weight: 0,  assists: 0)]);
 
   void updateReps(int index, int reps) {
     if (index >= 0 && index < state.length) {
@@ -21,7 +21,6 @@ class ExerciseSetListNotifier extends StateNotifier<List<ExerciseSet>> {
         ExerciseSet(
           reps: reps,
           weight: set.weight,
-          unit: set.unit,
           assists: set.assists,
         ),
         ...state.sublist(index + 1),
@@ -30,7 +29,7 @@ class ExerciseSetListNotifier extends StateNotifier<List<ExerciseSet>> {
   }
 
   void addSet() {
-    state = [...state, ExerciseSet(reps: 0, weight: 0, unit: 'KG', assists: 0)];
+    state = [...state, ExerciseSet(reps: 0, weight: 0, assists: 0)];
   }
 
   void updateSet(int index, ExerciseSet updatedSet) {
@@ -38,7 +37,6 @@ class ExerciseSetListNotifier extends StateNotifier<List<ExerciseSet>> {
       var newSet = state[index].copyWith(
         reps: updatedSet.reps,
         weight: updatedSet.weight,
-        unit: updatedSet.unit,
         assists: updatedSet.assists,
       );
       state = [
@@ -62,8 +60,6 @@ class _SeriesWidgetState extends ConsumerState<SeriesWidget> {
   List<int> weights = [0];
   List<TextEditingController> weightControllers = [];
 
-  String selectedUnit = 'KG'; // Valor inicial para el dropdown
-  List<String> units = ['KG', 'LB']; // Las opciones para el dropdown
 
   List<int> counts = [0]; // Un contador para cada serie que empieza en 0
   List<TextEditingController> countControllers = [];
@@ -344,78 +340,78 @@ void dispose() {
   ),
 ),
 
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: InkWell(
-                          onTap: () {
-                            String newUnit = selectedUnit == 'KG' ? 'LB' : 'KG';
-                            setState(() {
-                              selectedUnit = newUnit;
-                            });
-                            for (int i = 0;
-                                i < ref.read(exerciseSetProvider).length;
-                                i++) {
-                              // Aquí actualizamos cada set con la nueva unidad
-                              var currentSet = ref.read(exerciseSetProvider)[i];
-                              ref.read(exerciseSetProvider.notifier).updateSet(
-                                  i, currentSet.copyWith(unit: newUnit));
-                            }
-                          },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 8.0, vertical: 4.0),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey),
-                              borderRadius: BorderRadius.circular(12.0),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                // Icono a la izquierda
-                                Icon(
-                                  Icons.chevron_left,
-                                  size: 20.0,
-                                  color: Colors.white,
-                                ),
-                                // Espacio entre el icono y el texto
-                                SizedBox(width: 4.0),
-                                // Columna para el texto "Medida" y el valor de la unidad
-                                Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      "Unit", // Título encima del valor de la unidad
-                                      style: TextStyle(
-                                          fontSize: 12.0,
-                                          fontWeight: FontWeight.w600,
-                                          fontFamily: 'Geologica',
-                                          color: Colors.white),
-                                    ),
-                                    Text(
-                                      selectedUnit,
-                                      style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.w800,
-                                        fontFamily: 'Geologica',
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                // Espacio entre el texto y el icono
-                                SizedBox(width: 4.0),
-                                // Icono a la derecha
-                                Icon(
-                                  Icons.chevron_right,
-                                  color: Colors.white,
-                                  size: 20.0,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
+                      // Padding(
+                      //   padding: const EdgeInsets.all(8.0),
+                      //   child: InkWell(
+                      //     onTap: () {
+                      //       String newUnit = selectedUnit == 'KG' ? 'LB' : 'KG';
+                      //       setState(() {
+                      //         selectedUnit = newUnit;
+                      //       });
+                      //       for (int i = 0;
+                      //           i < ref.read(exerciseSetProvider).length;
+                      //           i++) {
+                      //         // Aquí actualizamos cada set con la nueva unidad
+                      //         var currentSet = ref.read(exerciseSetProvider)[i];
+                      //         ref.read(exerciseSetProvider.notifier).updateSet(
+                      //             i, currentSet.copyWith(unit: newUnit));
+                      //       }
+                      //     },
+                      //     child: Container(
+                      //       padding: EdgeInsets.symmetric(
+                      //           horizontal: 8.0, vertical: 4.0),
+                      //       decoration: BoxDecoration(
+                      //         border: Border.all(color: Colors.grey),
+                      //         borderRadius: BorderRadius.circular(12.0),
+                      //       ),
+                      //       child: Row(
+                      //         mainAxisSize: MainAxisSize.min,
+                      //         mainAxisAlignment: MainAxisAlignment.center,
+                      //         children: [
+                      //           // Icono a la izquierda
+                      //           Icon(
+                      //             Icons.chevron_left,
+                      //             size: 20.0,
+                      //             color: Colors.white,
+                      //           ),
+                      //           // Espacio entre el icono y el texto
+                      //           SizedBox(width: 4.0),
+                      //           // Columna para el texto "Medida" y el valor de la unidad
+                      //           Column(
+                      //             mainAxisSize: MainAxisSize.min,
+                      //             children: [
+                      //               Text(
+                      //                 "Unit", // Título encima del valor de la unidad
+                      //                 style: TextStyle(
+                      //                     fontSize: 12.0,
+                      //                     fontWeight: FontWeight.w600,
+                      //                     fontFamily: 'Geologica',
+                      //                     color: Colors.white),
+                      //               ),
+                      //               Text(
+                      //                 selectedUnit,
+                      //                 style: TextStyle(
+                      //                   fontSize: 16.0,
+                      //                   fontWeight: FontWeight.w800,
+                      //                   fontFamily: 'Geologica',
+                      //                   color: Colors.white,
+                      //                 ),
+                      //               ),
+                      //             ],
+                      //           ),
+                      //           // Espacio entre el texto y el icono
+                      //           SizedBox(width: 4.0),
+                      //           // Icono a la derecha
+                      //           Icon(
+                      //             Icons.chevron_right,
+                      //             color: Colors.white,
+                      //             size: 20.0,
+                      //           ),
+                      //         ],
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                   Padding(
   padding: const EdgeInsets.all(8.0),
   child: Container(

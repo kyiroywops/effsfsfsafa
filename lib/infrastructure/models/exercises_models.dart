@@ -3,68 +3,74 @@ import 'package:gymtrack/infrastructure/models/exercises_setmodels.dart';
 import 'package:gymtrack/infrastructure/models/gym_item_model.dart';
 
 class Exercise {
-  final String id; // Añade esta línea para el nuevo campo
+  final String id;
   final String name;
   final String exerciseIcon;
   final GymItem gymItem;
+  final String unit; // Nuevo campo para la unidad aplicable a todo el ejercicio
   final List<ExerciseSet> sets;
   final DateTime? timestamp;
-  final int recordSetWeightLowReps; // Añade esta línea para el nuevo campo
-
+  final int recordSetWeightLowReps;
 
   Exercise({
     this.id = '',
     required this.name,
     required this.exerciseIcon,
     required this.gymItem,
+    this.unit = '', // Proporciona un valor predeterminado o hazlo required según tu caso de uso
     required this.sets,
     this.timestamp,
-    this.recordSetWeightLowReps = 0, // Valor predeterminado para el nuevo campo
-
+    this.recordSetWeightLowReps = 0,
   });
 
-  factory Exercise.fromJson(Map<String, dynamic> json) {
-    return Exercise(
-      id: '', // Asignamos el ID del documento aquí
-      name: json['name'] as String? ?? 'Default Name',
-      exerciseIcon: json['icon'] as String? ?? 'default_icon.png',
+factory Exercise.fromJson(Map<String, dynamic> json) {
+  var setsList = json['sets'] as List? ?? [];
+  var sets = setsList.map((set) => ExerciseSet.fromJson(set as Map<String, dynamic>)).toList();
 
-      gymItem: GymItem(name: 'Default', iconPath: 'default_icon.png'), // Establece valores predeterminados o ajusta según sea necesario
-      sets: [], // Establece valores predeterminados o ajusta según sea necesario
-      timestamp: null, // Establece valores predeterminados o ajusta según sea necesario
-      recordSetWeightLowReps: json['recordSetWeightLowReps'] as int? ?? 0,
+  // Utiliza la clave 'icon' para obtener la ruta del ícono desde el JSON, ya que así es como está representado en tu JSON.
+  var exerciseIcon = json['icon'] as String? ?? 'default_icon.png'; // Asegúrate de que 'default_icon.png' sea un valor válido por defecto.
 
-
-    );
-  }
-
-factory Exercise.fromFirestore(Map<String, dynamic> data, String documentId) {
-  List<ExerciseSet> sets = (data['sets'] as List).map((set) => ExerciseSet.fromJson(set)).toList();
-  GymItem gymItem = GymItem(
-    name: data['gymItemName'] ?? 'Default',
-    iconPath: data['gymItemIconPath'] ?? 'default_icon.png',
-  );
+  var gymItemJson = json['gymItem'] as Map<String, dynamic>? ?? {};
 
   return Exercise(
-    id: documentId,
-    name: data['exerciseName'] ?? 'Default Name',
-    exerciseIcon: data['exerciseIcon'] ?? 'default_icon.png',
-    gymItem: gymItem,
+    id: json['id'] as String? ?? '',
+    name: json['name'] as String? ?? 'Default Name',
+    exerciseIcon: exerciseIcon, // Utiliza la variable exerciseIcon aquí.
+    gymItem: GymItem.fromJson(gymItemJson),
+    unit: json['unit'] as String? ?? '',
     sets: sets,
-    timestamp: data['timestamp'] != null ? (data['timestamp'] as Timestamp).toDate() : null,
-    recordSetWeightLowReps: data['recordSetWeightLowReps'] as int? ?? 0,
+    timestamp: json['timestamp'] != null ? DateTime.parse(json['timestamp'] as String) : null,
+    recordSetWeightLowReps: json['recordSetWeightLowReps'] as int? ?? 0,
   );
 }
 
+  factory Exercise.fromFirestore(Map<String, dynamic> data, String documentId) {
+    var sets = (data['sets'] as List).map((set) => ExerciseSet.fromJson(set)).toList();
+    return Exercise(
+      id: documentId,
+      name: data['exerciseName'] ?? 'Default Name',
+      exerciseIcon: data['exerciseIcon'] ?? 'default_icon.png',
+      gymItem: GymItem(
+        name: data['gymItemName'] ?? 'Default',
+        iconPath: data['gymItemIconPath'] ?? 'default_icon.png',
+      ),
+      unit: data['unit'] ?? '', // Asume que 'unit' está presente en los datos
+      sets: sets,
+      timestamp: data['timestamp'] != null ? (data['timestamp'] as Timestamp).toDate() : null,
+      recordSetWeightLowReps: data['recordSetWeightLowReps'] as int? ?? 0,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
-      'exerciseName': name,
+      'id': id,
+      'name': name,
       'exerciseIcon': exerciseIcon,
       'gymItem': gymItem.toJson(),
+      'unit': unit, // Incluye 'unit' al convertir a JSON
       'sets': sets.map((set) => set.toJson()).toList(),
       'timestamp': timestamp?.toIso8601String(),
-      'recordSetWeightLowReps': recordSetWeightLowReps, // Asegúrate de incluir el campo al convertir a JSON
-
+      'recordSetWeightLowReps': recordSetWeightLowReps,
     };
   }
 }

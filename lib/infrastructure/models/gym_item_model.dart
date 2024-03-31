@@ -8,8 +8,8 @@ class GymItem {
   // Método para crear una instancia de GymItem a partir de un mapa
   factory GymItem.fromJson(Map<String, dynamic> json) {
     return GymItem(
-      name: json['name'], // Asegúrate de que la llave 'name' coincide con cómo está en tu JSON
-      iconPath: json['iconPath'], // Asegúrate de que la llave 'iconPath' coincide con cómo está en tu JSON
+      name: json['name'] as String? ?? 'Default Name', // Proporciona 'Default Name' si json['name'] es null
+      iconPath: json['icon'] as String? ?? 'assets/images/icons/hombros1.png', // Asegúrate de que la clave sea 'icon' y no 'iconPath'
     );
   }
 
@@ -17,7 +17,7 @@ class GymItem {
   Map<String, dynamic> toJson() {
     return {
       'name': name,
-      'iconPath': iconPath,
+      'iconPath': iconPath, // Aquí también puedes cambiar 'iconPath' a 'icon' si lo deseas para ser coherente con el JSON
     };
   }
 }

@@ -57,6 +57,21 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
     List<DailyWorkout> dailyWorkouts = [];
+      Key futureBuilderKey = UniqueKey(); // Paso 1
+
+
+    void deleteExercise(BuildContext context, String documentId, DateTime date) {
+    FirebaseFirestore.instance.collection('exercises').doc(documentId).delete()
+      .then((_) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Exercise deleted')));
+        setState(() {
+          futureBuilderKey = UniqueKey(); // Paso 2
+        });
+      }).catchError((error) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to delete exercise')));
+      });
+  }
+
     
 
 Widget buildExerciseCard(Exercise exercise, GymItem gymItem, int recordSetWeightLowReps, DateTime date) {
@@ -209,27 +224,7 @@ Widget buildExerciseCard(Exercise exercise, GymItem gymItem, int recordSetWeight
   }
 }
 
- void deleteExercise(BuildContext context, String documentId, DateTime date) {
-  FirebaseFirestore.instance.collection('exercises').doc(documentId).delete()
-    .then((_) {
-      // Actualiza el estado para reflejar la eliminación
-      setState(() {
-        dailyWorkouts = dailyWorkouts.map((dailyWorkout) {
-          if (dailyWorkout.date == date) {
-            var updatedExercises = List<Exercise>.from(dailyWorkout.exercises);
-            updatedExercises.removeWhere((exercise) => exercise.id == documentId);
-            return DailyWorkout(date: dailyWorkout.date, exercises: updatedExercises);
-          }
-          return dailyWorkout;
-        }).toList();
-      });
-      // Muestra un SnackBar de éxito
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Exercise deleted')));
-    }).catchError((error) {
-      // En caso de error, muestra un SnackBar
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to delete exercise')));
-    });
-}
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -260,6 +255,7 @@ Widget buildExerciseCard(Exercise exercise, GymItem gymItem, int recordSetWeight
             // Se reemplaza el Expanded con FutureBuilder
             Expanded(
               child: FutureBuilder<List<DailyWorkout>>(
+                key: futureBuilderKey,
                 future: getExercisesGroupedByDate(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
