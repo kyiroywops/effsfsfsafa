@@ -1,21 +1,97 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
-class CalendarScreen extends StatelessWidget {
+class CalendarScreen extends StatefulWidget {
   const CalendarScreen({Key? key}) : super(key: key);
 
-    bool hasWorkout(DateTime date) {
-    // Aquí debes implementar tu lógica para saber si hay un entrenamiento
-    // Por ejemplo, puedes comprobar si en tu base de datos hay un registro para `date`.
-    // La siguiente línea es solo un marcador de posición y siempre devuelve falso.
-    // Deberás reemplazarlo con tu lógica real de comprobación.
-    return false;
+  @override
+  State<CalendarScreen> createState() => _CalendarScreenState();
+}
+
+class _CalendarScreenState extends State<CalendarScreen> 
+{ 
+    late DateTime _visibleMonth;
+    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+     Map<DateTime, bool> _workoutDays = {};
+
+   @override
+  void initState() {
+    super.initState();
+    _visibleMonth = DateTime.now();
+    _loadWorkoutDays();
+  }
+
+  void _loadWorkoutDays() {
+    DateTime startOfMonth = DateTime(_visibleMonth.year, _visibleMonth.month, 1);
+    DateTime endOfMonth = DateTime(_visibleMonth.year, _visibleMonth.month + 1, 0);
+
+    FirebaseFirestore.instance
+      .collection('exercises')
+      .where('userId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+      .where('timestamp', isGreaterThanOrEqualTo: startOfMonth)
+      .where('timestamp', isLessThanOrEqualTo: endOfMonth)
+      .get()
+      .then((snapshot) {
+    Map<DateTime, bool> workoutDays = {};
+    for (var doc in snapshot.docs) {
+      DateTime date = (doc['timestamp'] as Timestamp).toDate();
+      date = DateTime(date.year, date.month, date.day); // Normalize the time
+      workoutDays[date] = true;
+    }
+    print("Loaded workout days: $workoutDays");
+    setState(() {
+      _workoutDays = workoutDays;
+    });
+  });
+}
+
+
+
+  Future<Map<DateTime, bool>> _getWorkoutDaysForMonth(DateTime month) async {
+    DateTime startOfMonth = DateTime(month.year, month.month, 1);
+    DateTime endOfMonth = DateTime(month.year, month.month + 1, 0);
+
+    var snapshots = await _firestore
+        .collection('exercises')
+        .where('timestamp', isGreaterThanOrEqualTo: startOfMonth, isLessThanOrEqualTo: endOfMonth)
+        .get();
+
+    Map<DateTime, bool> workoutDays = {};
+    for (var doc in snapshots.docs) {
+      DateTime date = (doc['timestamp'] as Timestamp).toDate();
+      // Aquí asumimos que tus registros de entrenamiento tienen un campo timestamp
+      workoutDays[date] = true;
+    }
+
+    return workoutDays;
   }
 
 
+   List<DateTime> getMonthDates(DateTime month) {
+    DateTime firstOfMonth = DateTime(month.year, month.month, 1);
+    DateTime lastOfMonth = DateTime(month.year, month.month + 1, 0);
+    List<DateTime> days = [];
+    for (int i = 0; i < lastOfMonth.day; i++) {
+      days.add(firstOfMonth.add(Duration(days: i)));
+    }
+    return days;
+  }
+   
+ bool hasWorkout(DateTime date) {
+    // Eliminar la hora para comparar solo la fecha
+    date = DateTime(date.year, date.month, date.day);
+    return _workoutDays[date] ?? false;
+  }
+
   @override
   Widget build(BuildContext context) {
+     DateTime previousMonth = DateTime(_visibleMonth.year, _visibleMonth.month - 1, 1);
+    List<DateTime> previousMonthDates = getMonthDates(previousMonth);
+    List<DateTime> currentMonthDates = getMonthDates(_visibleMonth);
+    
+
     List<DateTime> nextWeekDates = List.generate(7, (index) {
       DateTime today = DateTime.now();
       return today.add(Duration(days: index));
@@ -122,38 +198,87 @@ class CalendarScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 15),
-              Expanded(
-                child: GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 7, // One week
-                    childAspectRatio: 1, // Square boxes
-                    crossAxisSpacing: 4,
-                    mainAxisSpacing: 4,
+              Row(
+              children: [
+              IconButton(
+  icon: Icon(Icons.chevron_left, color: Colors.white),
+  onPressed: () {
+    setState(() {
+      _visibleMonth = DateTime(_visibleMonth.year, _visibleMonth.month - 1, 1);
+      _loadWorkoutDays(); // Asegúrate de llamar a esta función aquí
+    });
+  },
+),
+                Expanded(
+                  child: Center(
+                    child: Text(
+                      DateFormat('MMMM yyyy').format(_visibleMonth),
+                      style: TextStyle(
+                        fontFamily: 'Geologica',
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24,
+                      ),
+                    ),
                   ),
-                  itemCount: daysInMonth,
-                  itemBuilder: (context, index) {
-                    DateTime day = startOfMonth.add(Duration(days: index));
+                ),
+               IconButton(
+  icon: Icon(Icons.chevron_right, color: Colors.white),
+  onPressed: () {
+    setState(() {
+      _visibleMonth = DateTime(_visibleMonth.year, _visibleMonth.month + 1, 1);
+      _loadWorkoutDays(); // Y aquí también
+    });
+  },
+),
+              ],
+            ),
+          Expanded(
+  child: GridView.builder(
+          itemCount: currentMonthDates.length,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 9, // Cambia a 7 si solo quieres mostrar una semana
+            childAspectRatio: 1,
+            crossAxisSpacing: 8,
+            mainAxisSpacing: 8,
+          ),
+          itemBuilder: (context, index) {
+            // Obtén el día actual basándote en los días del mes actual
+            DateTime day = currentMonthDates[index];
+            
+            // Normaliza la fecha para comparar solo la fecha, no la hora
+            day = DateTime(day.year, day.month, day.day);
 
-                    return Container(
-                      margin: const EdgeInsets.all(2),
-                      decoration: BoxDecoration(
-                        color: hasWorkout(day) ? Colors.green : Colors.grey[300],
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Center(
-                        child: Text(
-                          DateFormat('d').format(day),
-                          style: TextStyle(
-                            color: hasWorkout(day) ? Colors.white : Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    );
-                  },
+            // Verifica si el día tiene un entrenamiento
+            bool hasWorkoutFlag = _workoutDays[day] ?? false;
+
+            // Establece el color de fondo basado en si hay un entrenamiento
+            Color bgColor = hasWorkoutFlag ? Colors.green : Colors.grey[300]!;
+            Color textColor = hasWorkoutFlag ? Colors.white : Colors.black;
+
+
+          return Container(
+            margin: EdgeInsets.all(2),
+            decoration: BoxDecoration(
+              color: bgColor,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Center(
+              child: Text(
+                DateFormat('d').format(day),
+                style: TextStyle(
+                  color: textColor,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-            ],
+            ),
+          );
+        
+      
+    },
+  ),
+),
+          ],
           ),
         
         ),

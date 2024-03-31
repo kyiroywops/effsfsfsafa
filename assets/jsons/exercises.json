@@ -2,10 +2,9 @@
   {
     "name": "Sentadillas",
     "icon": "piernas1.png"
-  
   },
   {
-    "name": "Press de banca",
+    "name": "Press de Banca Plano",
     "icon": "pecho1.png"
   },
   {
@@ -13,7 +12,191 @@
     "icon": "espalda1.png"
   },
   {
-    "name": "Curl de bíceps",
+    "name": "Curl de Bíceps",
     "icon": "biceps1.png"
+  },
+  {
+    "name": "Elevaciones Laterales",
+    "icon": "hombros1.png"
+  },
+  {
+    "name": "Press Militar",
+    "icon": "hombros1.png"
+  },
+  {
+    "name": "Press de Pecho Inclinado",
+    "icon": "pecho1.png"
+  },
+  {
+    "name": "Fondos en Paralelas",
+    "icon": "biceps1.png"
+  },
+  {
+    "name": "Remo",
+    "icon": "espalda1.png"
+  },
+  {
+    "name": "Prensa de Piernas",
+    "icon": "piernas1.png"
+  },
+  {
+    "name": "Planchas",
+    "icon": "espalda1.png"
+  },
+  {
+    "name": "Zancadas",
+    "icon": "piernas1.png"
+  },
+  {
+    "name": "Peso Muerto",
+    "icon": "espalda1.png"
+  },
+  {
+    "name": "Press Arnold",
+    "icon": "hombros1.png"
+  },
+  {
+    "name": "Tríceps en Polea",
+    "icon": "biceps1.png"
+  },
+  {
+    "name": "Estocadas",
+    "icon": "piernas1.png"
+  },
+  {
+    "name": "Hip Thrust",
+    "icon": "piernas1.png"
+  },
+  {
+    "name": "Pullover",
+    "icon": "pecho1.png"
+  },
+  {
+    "name": "Face Pull",
+    "icon": "espalda1.png"
+  },
+  {
+    "name": "Curl de Martillo",
+    "icon": "biceps1.png"
+  },
+  {
+    "name": "Elevación de Talones",
+    "icon": "piernas1.png"
+  },
+  {
+    "name": "Flyes",
+    "icon": "pecho1.png"
+  },
+  {
+    "name": "Encogimientos de Hombros",
+    "icon": "hombros1.png"
+  },
+  {
+    "name": "Extensión de Cuádriceps",
+    "icon": "piernas1.png"
+  },
+  {
+    "name": "Curl de Pierna",
+    "icon": "piernas1.png"
+  },
+  {
+    "name": "Crunches",
+    "icon": "pecho1.png"
+  },
+  {
+    "name": "Russian Twists",
+    "icon": "pecho1.png"
+  },
+  {
+    "name": "Mountain Climbers",
+    "icon": "pecho1.png"
+  },
+  {
+    "name": "Saltos al Cajón",
+    "icon": "pecho1.png"
+  },
+  {
+    "name": "Burpees",
+    "icon": "pecho1.png"
+  },
+  {
+    "name": "Flexiones",
+    "icon": "pecho1.png"
+  },
+  {
+    "name": "Remo en Máquina",
+    "icon": "espalda1.png"
+  },
+  {
+    "name": "Patadas de Tríceps",
+    "icon": "espalda1.png"
+  },
+  {
+    "name": "Curl Concentrado",
+    "icon": "biceps1.png"
+  },
+  {
+    "name": "Elevaciones Frontales",
+    "icon": "hombros1.png"
+  },
+  {
+    "name": "Sentadillas Búlgaras",
+    "icon": "piernas1.png"
+  },
+  {
+    "name": "Abducciones de Cadera",
+    "icon": "pecho1.png"
+  },
+  {
+    "name": "Elevaciones de Cadera",
+    "icon": "piernas1.png"
+  },
+  {
+    "name": "Ejercicio del Superhombre",
+    "icon": "piernas1.png"
+  },
+  {
+    "name": "Extensiones de Espalda",
+    "icon": "espalda1.png"
+  },
+  {
+    "name": "Peso Muerto Rumano",
+    "icon": "piernas1.png"
+  },
+  {
+    "name": "Salto con Rodilla al Pecho",
+    "icon": "piernas1.png"
+  },
+  {
+    "name": "Sentadilla Sumo",
+    "icon": "piernas1.png"
+  },
+  {
+    "name": "Plancha Lateral",
+    "icon": "piernas1.png"
+  },
+  {
+    "name": "Jumping Jacks",
+    "icon": "piernas1.png"
+  },
+  {
+    "name": "Sentadilla con Salto",
+    "icon": "piernas1.png"
+  },
+  {
+    "name": "Tijeras Verticales",
+    "icon": "piernas1.png"
+  },
+  {
+    "name": "Rodillas Altas Corriendo en el Lugar",
+    "icon": "piernas1.png"
+  },
+  {
+    "name": "Tocar el Tobillo Alternando",
+    "icon": "piernas1.png"
+  },
+  {
+    "name": "Pull Downs",
+    "icon": "espalda1.png"
   }
 ]
