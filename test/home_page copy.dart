@@ -2,7 +2,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:gymtrack/infrastructure/models/exercises_models.dart';
 import 'package:gymtrack/infrastructure/models/exercises_setmodels.dart';
 import 'package:gymtrack/infrastructure/models/gym_item_model.dart';
@@ -54,32 +53,59 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-
 class _HomeScreenState extends State<HomeScreen> {
     List<DailyWorkout> dailyWorkouts = [];
-    
 
 Widget buildExerciseCard(Exercise exercise, GymItem gymItem, int recordSetWeightLowReps, DateTime date) {
   try {
       print('Construyendo tarjeta para: ${exercise.name}'); // Imprimir para verificar que se entre aquí
 
-
     // Aquí devolvemos el Container directamente.
-   return Slidable(
+     return Dismissible(
     key: Key(exercise.id),
-    endActionPane: ActionPane(
-      motion: const DrawerMotion(),
-      children: [
-        SlidableAction(
-          // Configuración del botón de eliminar
-          onPressed: (context) => deleteExercise(context, exercise.id, date),
-          backgroundColor: Colors.red,
-          foregroundColor: Colors.white,
-          icon: Icons.delete,
-          label: 'Delete',
-        ),
-      ],
+    background: Container(
+      color: Colors.red,
+      alignment: Alignment.centerRight,
+      padding: EdgeInsets.symmetric(horizontal: 20.0),
+      child: Icon(Icons.delete, color: Colors.white),
     ),
+    direction: DismissDirection.endToStart,
+    confirmDismiss: (direction) async {
+      // Muestra un diálogo de confirmación
+      final bool confirm = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Confirmar'),
+            content: Text('¿Quieres confirmar que quieres eliminar este elemento?'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: Text('Eliminar'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text('Cancelar'),
+              ),
+            ],
+          );
+        },
+      ) ?? false; // El '?? false' es para manejar el caso en que showDialog() sea null
+
+      // Si el usuario confirma, procede con la eliminación
+      if (confirm) {
+        FirebaseFirestore.instance.collection('exercises').doc(exercise.id).delete()
+          .then((_) {
+            deleteExercise(exercise.id, date);
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Exercise deleted')));
+          })
+          .catchError((error) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to delete exercise')));
+          });
+      }
+      return confirm;
+    },
+      
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         padding: const EdgeInsets.all(10),
@@ -203,27 +229,17 @@ Widget buildExerciseCard(Exercise exercise, GymItem gymItem, int recordSetWeight
   }
 }
 
- void deleteExercise(BuildContext context, String documentId, DateTime date) {
-  FirebaseFirestore.instance.collection('exercises').doc(documentId).delete()
-    .then((_) {
-      // Actualiza el estado para reflejar la eliminación
-      setState(() {
-        dailyWorkouts = dailyWorkouts.map((dailyWorkout) {
-          if (dailyWorkout.date == date) {
-            var updatedExercises = List<Exercise>.from(dailyWorkout.exercises);
-            updatedExercises.removeWhere((exercise) => exercise.id == documentId);
-            return DailyWorkout(date: dailyWorkout.date, exercises: updatedExercises);
-          }
-          return dailyWorkout;
-        }).toList();
-      });
-      // Muestra un SnackBar de éxito
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Exercise deleted')));
-    }).catchError((error) {
-      // En caso de error, muestra un SnackBar
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to delete exercise')));
+  void deleteExercise(String documentId, DateTime date) {
+    setState(() {
+      // Encuentra y elimina el ejercicio de la lista correspondiente al 'date'
+      dailyWorkouts = dailyWorkouts.map((dailyWorkout) {
+        if (dailyWorkout.date == date) {
+          dailyWorkout.exercises.removeWhere((exercise) => exercise.id == documentId);
+        }
+        return dailyWorkout;
+      }).toList();
     });
-}
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
