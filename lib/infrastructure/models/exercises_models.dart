@@ -3,6 +3,7 @@ import 'package:gymtrack/infrastructure/models/exercises_setmodels.dart';
 import 'package:gymtrack/infrastructure/models/gym_item_model.dart';
 
 class Exercise {
+  final String id; // Añade esta línea para el nuevo campo
   final String name;
   final String exerciseIcon;
   final GymItem gymItem;
@@ -12,6 +13,7 @@ class Exercise {
 
 
   Exercise({
+    this.id = '',
     required this.name,
     required this.exerciseIcon,
     required this.gymItem,
@@ -23,8 +25,10 @@ class Exercise {
 
   factory Exercise.fromJson(Map<String, dynamic> json) {
     return Exercise(
+      id: '', // Asignamos el ID del documento aquí
       name: json['name'] as String? ?? 'Default Name',
       exerciseIcon: json['icon'] as String? ?? 'default_icon.png',
+
       gymItem: GymItem(name: 'Default', iconPath: 'default_icon.png'), // Establece valores predeterminados o ajusta según sea necesario
       sets: [], // Establece valores predeterminados o ajusta según sea necesario
       timestamp: null, // Establece valores predeterminados o ajusta según sea necesario
@@ -34,29 +38,24 @@ class Exercise {
     );
   }
 
- factory Exercise.fromFirestore(Map<String, dynamic> data) {
-  List<ExerciseSet> sets = data['sets'] != null
-      ? (data['sets'] as List).map((set) => ExerciseSet.fromJson(set)).toList()
-      : []; // Asegúrate de manejar `null` aquí.
-
-  // Necesitas decidir cómo manejarás gymItem si gymItemName y gymItemIconPath están separados.
+factory Exercise.fromFirestore(Map<String, dynamic> data, String documentId) {
+  List<ExerciseSet> sets = (data['sets'] as List).map((set) => ExerciseSet.fromJson(set)).toList();
   GymItem gymItem = GymItem(
     name: data['gymItemName'] ?? 'Default',
     iconPath: data['gymItemIconPath'] ?? 'default_icon.png',
   );
 
   return Exercise(
+    id: documentId,
     name: data['exerciseName'] ?? 'Default Name',
     exerciseIcon: data['exerciseIcon'] ?? 'default_icon.png',
     gymItem: gymItem,
     sets: sets,
-    timestamp: data['timestamp'] != null
-        ? (data['timestamp'] as Timestamp).toDate()
-        : null, // Manejo de posible `null`.,
+    timestamp: data['timestamp'] != null ? (data['timestamp'] as Timestamp).toDate() : null,
     recordSetWeightLowReps: data['recordSetWeightLowReps'] as int? ?? 0,
-
   );
 }
+
   Map<String, dynamic> toJson() {
     return {
       'exerciseName': name,

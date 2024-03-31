@@ -110,6 +110,16 @@ class _AddWorkoutBottomSheetState extends ConsumerState<AddWorkoutBottomSheet> {
       'timestamp': FieldValue.serverTimestamp(), // Agrega la fecha actual
     }).then((documentReference) {
       print("Exercise Added with ID: ${documentReference.id}");
+        // Muestra el snackbar aquí
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Exercise has been added successfully!"),
+        backgroundColor: Colors.green,
+      ));
+
+      // Cierra el diálogo después de un breve retraso para que el snackbar sea visible
+      
+        Navigator.pop(context);
+      
     }).catchError((e) {
       print("Error adding document: $e");
     });

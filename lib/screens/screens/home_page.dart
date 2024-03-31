@@ -17,10 +17,11 @@ Future<List<DailyWorkout>> getExercisesGroupedByDate() async {
       .orderBy('timestamp', descending: true)
       .get();
 
-  Map<DateTime, List<Exercise>> exercisesByDate = {};
-  for (var doc in querySnapshot.docs) {
-    var data = doc.data() as Map<String, dynamic>;
-    Exercise exercise = Exercise.fromFirestore(data);
+ Map<DateTime, List<Exercise>> exercisesByDate = {};
+for (var doc in querySnapshot.docs) {
+  var data = doc.data() as Map<String, dynamic>;
+  String documentId = doc.id;  // Obtén el ID del documento
+  Exercise exercise = Exercise.fromFirestore(data, documentId);  // Pásalo al constructor fromFirestore
 
     DateTime date = DateTime(
       exercise.timestamp!.year,

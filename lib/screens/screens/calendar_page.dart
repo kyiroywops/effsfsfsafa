@@ -16,37 +16,37 @@ class _CalendarScreenState extends State<CalendarScreen>
     final FirebaseFirestore _firestore = FirebaseFirestore.instance;
      Map<DateTime, bool> _workoutDays = {};
 
-   @override
-  void initState() {
-    super.initState();
-    _visibleMonth = DateTime.now();
-    _loadWorkoutDays();
-  }
-
-  void _loadWorkoutDays() {
-    DateTime startOfMonth = DateTime(_visibleMonth.year, _visibleMonth.month, 1);
-    DateTime endOfMonth = DateTime(_visibleMonth.year, _visibleMonth.month + 1, 0);
-
-    FirebaseFirestore.instance
-      .collection('exercises')
-      .where('userId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-      .where('timestamp', isGreaterThanOrEqualTo: startOfMonth)
-      .where('timestamp', isLessThanOrEqualTo: endOfMonth)
-      .get()
-      .then((snapshot) {
-    Map<DateTime, bool> workoutDays = {};
-    for (var doc in snapshot.docs) {
-      DateTime date = (doc['timestamp'] as Timestamp).toDate();
-      date = DateTime(date.year, date.month, date.day); // Normalize the time
-      workoutDays[date] = true;
-    }
-    print("Loaded workout days: $workoutDays");
-    setState(() {
-      _workoutDays = workoutDays;
-    });
-  });
+ @override
+void initState() {
+  super.initState();
+  _visibleMonth = DateTime.now();
+  _loadWorkoutDaysForTwoMonths(_visibleMonth);
 }
 
+ void _loadWorkoutDaysForTwoMonths(DateTime visibleMonth) {
+  DateTime previousMonth = DateTime(visibleMonth.year, visibleMonth.month - 1, 1);
+  DateTime startOfPreviousMonth = DateTime(previousMonth.year, previousMonth.month, 1);
+  DateTime endOfNextMonth = DateTime(visibleMonth.year, visibleMonth.month + 1, 0);
+
+  FirebaseFirestore.instance
+    .collection('exercises')
+    .where('userId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+    .where('timestamp', isGreaterThanOrEqualTo: startOfPreviousMonth)
+    .where('timestamp', isLessThanOrEqualTo: endOfNextMonth)
+    .get()
+    .then((snapshot) {
+      Map<DateTime, bool> workoutDays = {};
+      for (var doc in snapshot.docs) {
+        DateTime date = (doc['timestamp'] as Timestamp).toDate();
+        date = DateTime(date.year, date.month, date.day); // Normalize the time
+        workoutDays[date] = true;
+      }
+      print("Loaded workout days: $workoutDays");
+      setState(() {
+        _workoutDays = workoutDays;
+      });
+    });
+}
 
 
   Future<Map<DateTime, bool>> _getWorkoutDaysForMonth(DateTime month) async {
@@ -87,10 +87,23 @@ class _CalendarScreenState extends State<CalendarScreen>
 
   @override
   Widget build(BuildContext context) {
-     DateTime previousMonth = DateTime(_visibleMonth.year, _visibleMonth.month - 1, 1);
-    List<DateTime> previousMonthDates = getMonthDates(previousMonth);
-    List<DateTime> currentMonthDates = getMonthDates(_visibleMonth);
-    
+    DateTime previousMonth = DateTime(_visibleMonth.year, _visibleMonth.month - 1, 1);
+  List<DateTime> previousMonthDates = getMonthDates(previousMonth);
+  List<DateTime> currentMonthDates = getMonthDates(_visibleMonth);
+   List<DateTime> combinedMonthDates = previousMonthDates + currentMonthDates;
+
+    // Obtén el mes anterior y el mes actual
+  DateTime currentMonth = _visibleMonth;
+
+  // Formatea los nombres de los meses
+  String previousMonthName = DateFormat('MMMM').format(previousMonth); // Solo mes para el mes anterior
+  String currentMonthName = DateFormat('MMMM yyyy').format(currentMonth); // Mes y año para el mes actual
+
+  // Combina los nombres de los meses para el título
+  String title = "$previousMonthName - $currentMonthName";
+
+
+  
 
     List<DateTime> nextWeekDates = List.generate(7, (index) {
       DateTime today = DateTime.now();
@@ -205,29 +218,29 @@ class _CalendarScreenState extends State<CalendarScreen>
   onPressed: () {
     setState(() {
       _visibleMonth = DateTime(_visibleMonth.year, _visibleMonth.month - 1, 1);
-      _loadWorkoutDays(); // Asegúrate de llamar a esta función aquí
+      _loadWorkoutDaysForTwoMonths(_visibleMonth);
     });
   },
 ),
                 Expanded(
                   child: Center(
                     child: Text(
-                      DateFormat('MMMM yyyy').format(_visibleMonth),
+                      title,
                       style: TextStyle(
                         fontFamily: 'Geologica',
                         color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 16,
                       ),
                     ),
                   ),
                 ),
-               IconButton(
+     IconButton(
   icon: Icon(Icons.chevron_right, color: Colors.white),
   onPressed: () {
     setState(() {
       _visibleMonth = DateTime(_visibleMonth.year, _visibleMonth.month + 1, 1);
-      _loadWorkoutDays(); // Y aquí también
+      _loadWorkoutDaysForTwoMonths(_visibleMonth);
     });
   },
 ),
@@ -235,27 +248,26 @@ class _CalendarScreenState extends State<CalendarScreen>
             ),
           Expanded(
   child: GridView.builder(
-          itemCount: currentMonthDates.length,
+          itemCount: combinedMonthDates.length, // Usa la lista combinada para itemCount
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 9, // Cambia a 7 si solo quieres mostrar una semana
+            crossAxisCount: 9, // Cambia esto según tu diseño
             childAspectRatio: 1,
             crossAxisSpacing: 8,
             mainAxisSpacing: 8,
           ),
           itemBuilder: (context, index) {
-            // Obtén el día actual basándote en los días del mes actual
-            DateTime day = currentMonthDates[index];
+            // Usa la lista combinada para obtener el día
+            DateTime day = combinedMonthDates[index];
             
-            // Normaliza la fecha para comparar solo la fecha, no la hora
+            // Normaliza la fecha para comparar solo la fecha
             day = DateTime(day.year, day.month, day.day);
 
             // Verifica si el día tiene un entrenamiento
             bool hasWorkoutFlag = _workoutDays[day] ?? false;
 
             // Establece el color de fondo basado en si hay un entrenamiento
-            Color bgColor = hasWorkoutFlag ? Colors.green : Colors.grey[300]!;
-            Color textColor = hasWorkoutFlag ? Colors.white : Colors.black;
-
+            Color bgColor = hasWorkoutFlag ? Colors.green : (day.month == _visibleMonth.month ? Colors.grey[300]! : Colors.grey[200]!);
+            Color textColor = hasWorkoutFlag ? Colors.white : (day.month == _visibleMonth.month ? Colors.black : Colors.grey);
 
           return Container(
             margin: EdgeInsets.all(2),
