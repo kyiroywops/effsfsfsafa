@@ -66,17 +66,23 @@ Widget buildExerciseCard(Exercise exercise, GymItem gymItem, int recordSetWeight
 
     // Aquí devolvemos el Container directamente.
    return Slidable(
+
     key: Key(exercise.id),
     endActionPane: ActionPane(
-      motion: const DrawerMotion(),
+      motion: Padding(
+        padding: const EdgeInsets.all(25.0),
+        child: const DrawerMotion(),
+      ),
       children: [
         SlidableAction(
+          spacing: 2,
+          autoClose: true,
+          borderRadius: BorderRadius.circular(10),
           // Configuración del botón de eliminar
           onPressed: (context) => deleteExercise(context, exercise.id, date),
-          backgroundColor: Colors.red,
-          foregroundColor: Colors.white,
+          backgroundColor: Colors.red.shade700,
+          foregroundColor: Colors.grey.shade200,
           icon: Icons.delete,
-          label: 'Delete',
         ),
       ],
     ),
