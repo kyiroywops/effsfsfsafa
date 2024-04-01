@@ -1,66 +1,66 @@
 [
   {
-    "name": "Sentadillas",
+    "name": "Squats",
     "icon": "piernas1.png"
   },
   {
-    "name": "Press de Banca Plano",
+    "name": "Flat Bench Press",
     "icon": "pecho1.png"
   },
   {
-    "name": "Dominadas",
+    "name": "Pull-Ups",
     "icon": "espalda1.png"
   },
   {
-    "name": "Curl de Bíceps",
+    "name": "Biceps Curl",
     "icon": "biceps1.png"
   },
   {
-    "name": "Elevaciones Laterales",
+    "name": "Lateral Raises",
     "icon": "hombros1.png"
   },
   {
-    "name": "Press Militar",
+    "name": "Military Press",
     "icon": "hombros1.png"
   },
   {
-    "name": "Press de Pecho Inclinado",
+    "name": "Incline Chest Press",
     "icon": "pecho1.png"
   },
   {
-    "name": "Fondos en Paralelas",
+    "name": "Parallel Bar Dips",
     "icon": "biceps1.png"
   },
   {
-    "name": "Remo",
+    "name": "Rowing",
     "icon": "espalda1.png"
   },
   {
-    "name": "Prensa de Piernas",
+    "name": "Leg Press",
     "icon": "piernas1.png"
   },
   {
-    "name": "Planchas",
+    "name": "Planks",
     "icon": "espalda1.png"
   },
   {
-    "name": "Zancadas",
+    "name": "Lunges",
     "icon": "piernas1.png"
   },
   {
-    "name": "Peso Muerto",
+    "name": "Deadlift",
     "icon": "espalda1.png"
   },
   {
-    "name": "Press Arnold",
+    "name": "Arnold Press",
     "icon": "hombros1.png"
   },
   {
-    "name": "Tríceps en Polea",
+    "name": "Tricep Pushdowns",
     "icon": "biceps1.png"
   },
   {
-    "name": "Estocadas",
+    "name": "Lunges",
     "icon": "piernas1.png"
   },
   {
@@ -76,11 +76,11 @@
     "icon": "espalda1.png"
   },
   {
-    "name": "Curl de Martillo",
+    "name": "Hammer Curl",
     "icon": "biceps1.png"
   },
   {
-    "name": "Elevación de Talones",
+    "name": "Calf Raises",
     "icon": "piernas1.png"
   },
   {
@@ -88,15 +88,15 @@
     "icon": "pecho1.png"
   },
   {
-    "name": "Encogimientos de Hombros",
+    "name": "Shrug",
     "icon": "hombros1.png"
   },
   {
-    "name": "Extensión de Cuádriceps",
+    "name": "Quad Extension",
     "icon": "piernas1.png"
   },
   {
-    "name": "Curl de Pierna",
+    "name": "Leg Curl",
     "icon": "piernas1.png"
   },
   {
@@ -112,7 +112,7 @@
     "icon": "pecho1.png"
   },
   {
-    "name": "Saltos al Cajón",
+    "name": "Box Jumps",
     "icon": "pecho1.png"
   },
   {
@@ -120,59 +120,59 @@
     "icon": "pecho1.png"
   },
   {
-    "name": "Flexiones",
+    "name": "Push-Ups",
     "icon": "pecho1.png"
   },
   {
-    "name": "Remo en Máquina",
+    "name": "Rowing Machine",
     "icon": "espalda1.png"
   },
   {
-    "name": "Patadas de Tríceps",
+    "name": "Tricep Kickbacks",
     "icon": "espalda1.png"
   },
   {
-    "name": "Curl Concentrado",
+    "name": "Concentration Curl",
     "icon": "biceps1.png"
   },
   {
-    "name": "Elevaciones Frontales",
+    "name": "Front Raises",
     "icon": "hombros1.png"
   },
   {
-    "name": "Sentadillas Búlgaras",
+    "name": "Bulgarian Squats",
     "icon": "piernas1.png"
   },
   {
-    "name": "Abducciones de Cadera",
+    "name": "Hip Abductions",
     "icon": "pecho1.png"
   },
   {
-    "name": "Elevaciones de Cadera",
+    "name": "Hip Raises",
     "icon": "piernas1.png"
   },
   {
-    "name": "Ejercicio del Superhombre",
+    "name": "Superman Exercise",
     "icon": "piernas1.png"
   },
   {
-    "name": "Extensiones de Espalda",
+    "name": "Back Extension",
     "icon": "espalda1.png"
   },
   {
-    "name": "Peso Muerto Rumano",
+    "name": "Romanian Deadlift",
     "icon": "piernas1.png"
   },
   {
-    "name": "Salto con Rodilla al Pecho",
+    "name": "Knee-to-Chest Jump",
     "icon": "piernas1.png"
   },
   {
-    "name": "Sentadilla Sumo",
+    "name": "Sumo Squat",
     "icon": "piernas1.png"
   },
   {
-    "name": "Plancha Lateral",
+    "name": "Side Plank",
     "icon": "piernas1.png"
   },
   {
@@ -180,19 +180,19 @@
     "icon": "piernas1.png"
   },
   {
-    "name": "Sentadilla con Salto",
+    "name": "Jump Squat",
     "icon": "piernas1.png"
   },
   {
-    "name": "Tijeras Verticales",
+    "name": "Vertical Scissor Kicks",
     "icon": "piernas1.png"
   },
   {
-    "name": "Rodillas Altas Corriendo en el Lugar",
+    "name": "High Knees Running in Place",
     "icon": "piernas1.png"
   },
   {
-    "name": "Tocar el Tobillo Alternando",
+    "name": "Alternating Ankle Touch",
     "icon": "piernas1.png"
   },
   {

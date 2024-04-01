@@ -17,7 +17,7 @@ void showAddWorkoutBottomSheet(BuildContext context) {
     context: context,
     isScrollControlled: true,
     isDismissible: true,
-    backgroundColor: Colors.transparent,
+    backgroundColor: Colors.blueAccent.shade100.withOpacity(0.75),
     builder: (BuildContext context) => AddWorkoutBottomSheet(),
   );
 }
@@ -384,7 +384,7 @@ class _AddWorkoutBottomSheetState extends ConsumerState<AddWorkoutBottomSheet> {
             Flexible(
               flex:1,
               child: Padding(
-                            padding: const EdgeInsets.all(15.0),
+                            padding: const EdgeInsets.all(5.0),
                             child: InkWell(
                              onTap: () {
                               setState(() {
@@ -394,7 +394,7 @@ class _AddWorkoutBottomSheetState extends ConsumerState<AddWorkoutBottomSheet> {
                             },
                               child: Container(
                                 padding: EdgeInsets.symmetric(
-                                    horizontal: 8.0, vertical: 4.0),
+                                    horizontal: 4.0, vertical: 4.0),
                                 decoration: BoxDecoration(
                                   color: Colors.grey.shade500,
                                   border: Border.all(color: Colors.grey),

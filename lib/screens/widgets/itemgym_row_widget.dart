@@ -14,13 +14,13 @@ class GymItemRow extends ConsumerStatefulWidget {
 // Extiende de ConsumerState
 class _GymItemRowState extends ConsumerState<GymItemRow> {
   final List<GymItem> gymItems = [
-    GymItem(name: 'Mancuerna', iconPath: 'assets/images/icons/mancuernas.png'),
-    GymItem(name: 'Barra Olímpica', iconPath: 'assets/images/icons/barraolimpica.png'),
-    GymItem(name: 'Máquina', iconPath: 'assets/images/icons/maquina.png'),
-    GymItem(name: 'Polea', iconPath: 'assets/images/icons/maquinapolea.png'),
-    GymItem(name: 'Multipower', iconPath: 'assets/images/icons/multipower.png'),
+    GymItem(name: 'Dumbbell', iconPath: 'assets/images/icons/mancuernas.png'),
+    GymItem(name: 'Olympic Barbell', iconPath: 'assets/images/icons/barraolimpica.png'),
+    GymItem(name: 'Machine', iconPath: 'assets/images/icons/maquina.png'),
+    GymItem(name: 'Pulley', iconPath: 'assets/images/icons/maquinapolea.png'),
+    GymItem(name: 'Smith Machine', iconPath: 'assets/images/icons/multipower.png'),
   ];
-
+  
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width / gymItems.length; // Calcula el ancho para cada elemento.

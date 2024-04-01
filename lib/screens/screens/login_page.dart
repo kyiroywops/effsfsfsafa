@@ -66,7 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           Positioned(
             top: titleTopPosition,
-            left: 20,
+            left: 55,
             child: isEmailEntered
                 ? Row(
                     children: [
@@ -84,15 +84,17 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 40,
-                            fontWeight: FontWeight.bold),
+                            fontFamily: 'Geologica',
+                            fontWeight: FontWeight.w900),
                       ),
                     ],
                   )
                 : Text('Hi!',
                     style: TextStyle(
                         color: Colors.white,
+                        fontFamily: 'Geologica',
                         fontSize: 40,
-                        fontWeight: FontWeight.bold)),
+                        fontWeight: FontWeight.w900)),
           ),
           // Container con efecto "frosted"
           Positioned(
@@ -109,63 +111,65 @@ class _LoginScreenState extends State<LoginScreen> {
                       sigmaY:
                           5), // Ajusta los valores de sigma para aumentar o disminuir el efecto de desenfoque
                   child: Container(
-                    padding: EdgeInsets.all(20),
+                    padding: EdgeInsets.fromLTRB(30, 25, 30, 20),
                     decoration: BoxDecoration(
                       color: Colors.grey.withOpacity(
-                          0.3), // Cambia el color aquí a gris con cierta transparencia
+                          0.1), // Cambia el color aquí a gris con cierta transparencia
                       borderRadius: BorderRadius.circular(25),
                     ),
                     child: Column(
                       children: <Widget>[
                         if (!isEmailEntered) ...[
-                          TextFormField(
-                            validator: (value) {
-                              if (value == null ||
-                                  value.isEmpty ||
-                                  !value.contains('@')) {
-                                return 'Please enter a valid email address.';
-                              }
-                              return null;
-                            },
+                         TextFormField(
+  validator: (value) {
+    if (value == null || value.isEmpty || !value.contains('@')) {
+      return 'Please enter a valid email address.';
+    }
+    return null;
+  },
+  controller: emailController,
+  keyboardType: TextInputType.emailAddress,
+  cursorColor: Colors.black, // Color del cursor
+  style: TextStyle(
+    fontSize: 12,
+    fontFamily: 'Geologica',
+    color: Colors.grey.shade900,
+    fontWeight: FontWeight.w600
+  ),
 
-                            controller: emailController,
-                            keyboardType: TextInputType.emailAddress,
-                            cursorColor: Colors.black, // Color del cursor
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Colors.grey[300],
-                              hintText: 'Email',
-                              // Personaliza la apariencia del borde en foco
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                                borderSide: BorderSide(
-                                  color: Colors
-                                      .black, // Borde verde cuando el TextField está en foco
-                                  width:
-                                      3.0, // Aumenta el grosor del borde aquí
-                                ),
-                              ),
-                              // Personaliza la apariencia del borde cuando el TextField está sin foco
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                                borderSide: BorderSide(
-                                  color: Colors.grey[
-                                      200]!, // Borde gris claro en el estado normal
-                                  width: 1.0, // Grosor estándar del borde
-                                ),
-                              ),
-
-                              // Asegúrate de eliminar la propiedad prefixIcon para no mostrar ningún icono
-                            ),
-                          ),
+  decoration: InputDecoration(
+    filled: true,
+    fillColor: Colors.grey[200],
+    hintText: 'Email',
+    contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0), // Ajusta el padding aquí para reducir la altura
+    // Personaliza la apariencia del borde en foco
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8.0),
+      borderSide: BorderSide(
+        color: Colors.black, // Borde negro cuando el TextField está en foco
+        width: 3.0, // Grosor del borde
+      ),
+    ),
+    // Personaliza la apariencia del borde cuando el TextField está sin foco
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8.0),
+      borderSide: BorderSide(
+        color: Colors.grey[200]!, // Borde gris claro en el estado normal
+        width: 1.0, // Grosor estándar del borde
+      ),
+    ),
+  ),
+),
                           SizedBox(height: 20),
                           ElevatedButton(
                             child: Text(
                               'Continue',
                               style: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: 'Cabin',
+                                  color: Colors.grey[200],
+                                  fontSize: 12,
+                                  fontFamily: 'Geologica',
                                   fontWeight: FontWeight.w700), // Texto blanco
+
                             ),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.black, // Fondo negro
@@ -174,7 +178,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               disabledBackgroundColor: Colors.grey.withOpacity(
                                   0.12), // Color del botón cuando está deshabilitado o en press
                               minimumSize: Size(double.infinity,
-                                  60), // Ancho máximo y alto fijo
+                                  40), // Ancho máximo y alto fijo
                               padding: EdgeInsets.symmetric(
                                   horizontal: 20,
                                   vertical:
@@ -193,6 +197,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ] else ...[
                           TextField(
+                              style: TextStyle(
+                            fontSize: 12,
+                            fontFamily: 'Geologica',
+                            color: Colors.grey.shade900,
+                            fontWeight: FontWeight.w600
+                          ),
+
                             controller: passwordController,
 
                             keyboardType: TextInputType.text,
@@ -202,6 +213,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 '●', // Utiliza un carácter de círculo más grande
                             cursorColor: Colors.black, // Color del cursor
                             decoration: InputDecoration(
+                              
                               suffixIcon: Padding(
                                 padding:
                                     const EdgeInsets.fromLTRB(0, 15, 20, 0),
@@ -213,15 +225,17 @@ class _LoginScreenState extends State<LoginScreen> {
                                   },
                                   child: Text(
                                     _passwordVisible ? "Hide" : "View",
-                                    style: TextStyle(
-                                      color: Colors.grey[
-                                          700], // Ajusta el color según tu diseño
-                                      fontWeight: FontWeight.bold,
+                                      style: TextStyle(
+                                      fontSize: 12,
+                                      fontFamily: 'Geologica',
+                                      color: Colors.grey.shade900,
+                                      fontWeight: FontWeight.w800
                                     ),
+
                                   ),
                                 ),
                               ),
-
+                              
                               filled: true,
                               fillColor: Colors.grey[300],
                               hintText: 'Password',
@@ -234,6 +248,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   width: 3.0, // Grosor del borde
                                 ),
                               ),
+                              
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8.0),
                                 borderSide: BorderSide(
@@ -244,17 +259,17 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               // Ajustes para el texto de sugerencia, color de relleno, etc.
                             ),
-                            style: TextStyle(
-                              fontSize:
-                                  15, // Aumenta el tamaño de la fuente para que los círculos parezcan más grandes
-                            ),
+                          
                           ),
                           SizedBox(height: 20),
                           ElevatedButton(
                             child: Text(
                               'Login',
                               style: TextStyle(
-                                  color: Colors.white), // Texto blanco
+                                  fontSize: 12,
+                                  fontFamily: 'Geologica',
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.grey[200]), // Texto blanco
                             ),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.black, // Fondo negro
@@ -263,11 +278,11 @@ class _LoginScreenState extends State<LoginScreen> {
                               disabledBackgroundColor: Colors.grey.withOpacity(
                                   0.12), // Color del botón cuando está deshabilitado o en press
                               minimumSize: Size(double.infinity,
-                                  60), // Ancho máximo y alto fijo
+                                  52), // Ancho máximo y alto fijo
                               padding: EdgeInsets.symmetric(
                                   horizontal: 20,
                                   vertical:
-                                      18), // Padding vertical para que coincida con la altura del TextField
+                                      0), // Padding vertical para que coincida con la altura del TextField
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(
                                     8.0), // Mismo radio de borde que el TextField
@@ -318,8 +333,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                   "Forgot your password?",
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                    fontSize: 14,
+                                    color: Colors.grey[200],
+                                    fontFamily: 'Geologica',
+                                    fontSize: 12,
                                   ),
                                 ),
                                 style: TextButton.styleFrom(
@@ -344,9 +360,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               child: Text(
                                 'or',
                                 style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w900,
+                                  color: Colors.grey[900],
+                                  fontFamily: 'Geologica',
                                 ),
                               ),
                             ),
@@ -366,8 +383,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               label: Text(
                                 'Continue with Facebook',
                                 style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey[200],
+                                  fontWeight: FontWeight.w700,
+                                  fontFamily: 'Geologica',
+                                  fontSize: 12,
                                 ),
                               ),
                               style: TextButton.styleFrom(
@@ -376,7 +395,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     .blue, // El color de fondo de Facebook
                                 padding: EdgeInsets.symmetric(
                                     vertical:
-                                        18.0), // Alinea el padding vertical con el botón "Continue"
+                                        15.0), // Alinea el padding vertical con el botón "Continue"
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8.0),
                                 ), // El color del texto e icono cuando se presiona el botón
@@ -401,8 +420,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                 label: Text(
                                   'Continue with Google',
                                   style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey[900],
+                                    fontWeight: FontWeight.w800,
+                                    fontFamily: 'Geologica',
+                                    fontSize: 12,
                                   ),
                                 ),
                                 style: TextButton.styleFrom(
@@ -411,7 +432,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       200], // El color de fondo de Facebook
                                   padding: EdgeInsets.symmetric(
                                       vertical:
-                                          18.0), // Alinea el padding vertical con el botón "Continue"
+                                          15.0), // Alinea el padding vertical con el botón "Continue"
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8.0),
                                   ), // El color del texto e icono cuando se presiona el botón
@@ -434,8 +455,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                     Text(
                                       "Don't have an account? ",
                                       style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 16,
+                                        color: Colors.grey[700],
+                                        fontFamily: 'Geologica',
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 12,
                                       ),
                                     ),
                                     GestureDetector(
@@ -445,8 +468,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                       child: Text(
                                         "Sign up",
                                         style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w900,
+                                          color: Colors.brown[500],
+                                          fontFamily: 'Geologica',
                                         ),
                                       ),
                                     ),
@@ -459,9 +484,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                   child: Text(
                                     "Forgot your password?",
                                     style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.brown[500],
+                                      fontSize: 12,
+
                                     ),
                                   ),
                                   style: TextButton.styleFrom(

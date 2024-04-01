@@ -55,7 +55,7 @@ class SeriesWidget extends ConsumerStatefulWidget {
 
 class _SeriesWidgetState extends ConsumerState<SeriesWidget> {
   List<List<bool>> series = [
-    List<bool>.filled(20, false),
+    List<bool>.filled(40, false),
   ];
   List<int> weights = [0];
   List<TextEditingController> weightControllers = [];
@@ -79,7 +79,7 @@ class _SeriesWidgetState extends ConsumerState<SeriesWidget> {
       initialSet.assists
     ]; // Inicializa con las asistencias del primer set
     series = [
-      List<bool>.filled(20, false)
+      List<bool>.filled(40, false)
     ]; // Inicializa la serie con todos falsos
 
 for (var exerciseSet in ref.read(exerciseSetProvider)) {
@@ -140,7 +140,7 @@ for (var exerciseSet in ref.read(exerciseSetProvider)) {
 // Actualiza _addSerie para manejar el nuevo estado de selección para la serie agregada
  void _addSerie() {
   setState(() {
-    series.add(List<bool>.filled(20, false));
+    series.add(List<bool>.filled(40, false));
     weights.add(0);
     counts.add(0);
     isSelectedList.add(false);
@@ -181,7 +181,7 @@ for (var exerciseSet in ref.read(exerciseSetProvider)) {
   void _updateCount(int serieIndex, int delta) {
     var currentSets = ref.read(exerciseSetProvider);
     if (serieIndex < currentSets.length) {
-      int newCount = (counts[serieIndex] + delta).clamp(0, 20);
+      int newCount = (counts[serieIndex] + delta).clamp(0, 40);
       setState(() {
         counts[serieIndex] = newCount;
         countControllers[serieIndex].text = newCount.toString();
@@ -209,6 +209,8 @@ void dispose() {
 
   @override
   Widget build(BuildContext context) {
+
+
     return Column(
       children: [
         ...series.asMap().entries.map((entry) {
@@ -217,50 +219,65 @@ void dispose() {
             children: [
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        'Set ${serieIndex + 1} ',
-                        style: TextStyle(
-                          fontFamily: 'Geologica',
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
+                child: Container(
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'Set ${serieIndex + 1} ',
+                          style: TextStyle(
+                            fontFamily: 'Geologica',
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
-                    ),
-                    ...entry.value.asMap().entries.map((innerEntry) {
-                      int index = innerEntry.key;
-                      bool isActive = innerEntry.value;
-                      return GestureDetector(
-                        onTap: () => _handleTap(serieIndex, index),
-                        child: Container(
-                          width: 30,
-                          height: 30,
-                          margin: EdgeInsets.symmetric(horizontal: 2),
-                          decoration: BoxDecoration(
-                            color: isActive
-                                ? (index < counts[serieIndex]
-                                    ? Colors.blue
-                                    : Colors.brown)
-                                : Colors.grey,
-                            shape: BoxShape.rectangle,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Center(
-                              child: Text(
-                            '${index + 1}',
-                            style: TextStyle(
-                              fontFamily: 'Geologica',
-                              fontWeight: FontWeight.w400,
-                              color: Colors.white,
+                      ...entry.value.asMap().entries.map((innerEntry) {
+                        int index = innerEntry.key;
+                        bool isActive = innerEntry.value;
+                        return GestureDetector(
+                       
+    onPanUpdate: (details) {
+  // Aquí, calcula el índice del cuadrado basado en la posición del gesto
+  final index = calculateSquareIndex(details.localPosition);
+  if (index != -1) {
+   // Esto asume que tienes una lista de índices y solo quieres agregar índices nuevos
+final currentIndexList = ref.read(squareSelectionProvider.state).state;
+if (!currentIndexList.contains(index)) {
+  ref.read(squareSelectionProvider.state).state = [...currentIndexList, index];
+}
+  }
+},
+
+                          onTap: () => _handleTap(serieIndex, index),
+                          child: Container(
+                            width: 30,
+                            height: 30,
+                            margin: EdgeInsets.symmetric(horizontal: 2),
+                            decoration: BoxDecoration(
+                              color: isActive
+                                  ? (index < counts[serieIndex]
+                                      ? Colors.blue
+                                      : Colors.brown)
+                                  : Colors.grey,
+                              shape: BoxShape.rectangle,
+                              borderRadius: BorderRadius.circular(12),
                             ),
-                          )),
-                        ),
-                      );
-                    }).toList(),
-                  ],
+                            child: Center(
+                                child: Text(
+                              '${index + 1}',
+                              style: TextStyle(
+                                fontFamily: 'Geologica',
+                                fontWeight: FontWeight.w400,
+                                color: Colors.white,
+                              ),
+                            )),
+                          ),
+                        );
+                      }).toList(),
+                    ],
+                  ),
                 ),
               ),
               Padding(
@@ -371,9 +388,10 @@ void dispose() {
                 ),
               ),
             ),
+            
             Container(
               width: 35,
-              height: 40,
+              height: 33,
               // Reemplaza el TextField por el método _buildAssistsTextField
               child: _buildAssistsTextField(serieIndex),
             ),
@@ -422,3 +440,11 @@ void dispose() {
   }
 }
 
+
+final squareSelectionProvider = StateProvider<List<int>>((ref) => []);
+
+int calculateSquareIndex(Offset localPosition) {
+  double squareWidth = 30; // Asumiendo cada cuadrado tiene 30 pixels de ancho + margen
+  int index = (localPosition.dx / squareWidth).floor();
+  return index;
+}
