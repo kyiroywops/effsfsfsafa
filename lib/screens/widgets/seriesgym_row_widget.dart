@@ -274,18 +274,17 @@ void dispose() {
                      Padding(
   padding: const EdgeInsets.all(8.0),
   child: Container(
+    
     height: 65,
     decoration: BoxDecoration(
-      border: Border.all(
-        color: isSelectedList[serieIndex] ? Colors.blue : Colors.grey,
-        width: 1.0,
-      ),
+      color: Colors.brown.shade900,
+      
       borderRadius: BorderRadius.circular(10),
     ),
     child: Row(
       children: <Widget>[
         IconButton(
-          icon: Icon(Icons.remove, size: 20, color: Colors.white),
+          icon: Icon(Icons.remove, size: 20, color: Colors.grey.shade200),
           onPressed: () => _updateWeight(serieIndex, -1),
           padding: EdgeInsets.zero, // Elimina padding adicional
           constraints: BoxConstraints(minWidth: 10, minHeight: 10), // Menores restricciones
@@ -299,8 +298,8 @@ void dispose() {
                 style: TextStyle(
                   fontSize: 10,
                   fontFamily: 'Geologica',
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
+                  fontWeight: FontWeight.w800,
+                  color: Colors.grey.shade200,
                 ),
               ),
             ),
@@ -312,6 +311,7 @@ void dispose() {
                 controller: weightControllers[serieIndex],
                 keyboardType: TextInputType.numberWithOptions(decimal: false),
                 decoration: InputDecoration(
+                  
                   border: InputBorder.none,
                   hintText: '0',
                 ),
@@ -319,7 +319,7 @@ void dispose() {
                     fontSize: 16,
                     fontWeight: FontWeight.w800,
                     fontFamily: 'Geologica',
-                    color: Colors.white),
+                    color: Colors.grey.shade200),
                 onChanged: (value) {
                   // Actualiza el estado cuando se ingresa un valor manualmente
                   int newWeight = int.tryParse(value) ?? weights[serieIndex];
@@ -340,86 +340,13 @@ void dispose() {
   ),
 ),
 
-                      // Padding(
-                      //   padding: const EdgeInsets.all(8.0),
-                      //   child: InkWell(
-                      //     onTap: () {
-                      //       String newUnit = selectedUnit == 'KG' ? 'LB' : 'KG';
-                      //       setState(() {
-                      //         selectedUnit = newUnit;
-                      //       });
-                      //       for (int i = 0;
-                      //           i < ref.read(exerciseSetProvider).length;
-                      //           i++) {
-                      //         // Aquí actualizamos cada set con la nueva unidad
-                      //         var currentSet = ref.read(exerciseSetProvider)[i];
-                      //         ref.read(exerciseSetProvider.notifier).updateSet(
-                      //             i, currentSet.copyWith(unit: newUnit));
-                      //       }
-                      //     },
-                      //     child: Container(
-                      //       padding: EdgeInsets.symmetric(
-                      //           horizontal: 8.0, vertical: 4.0),
-                      //       decoration: BoxDecoration(
-                      //         border: Border.all(color: Colors.grey),
-                      //         borderRadius: BorderRadius.circular(12.0),
-                      //       ),
-                      //       child: Row(
-                      //         mainAxisSize: MainAxisSize.min,
-                      //         mainAxisAlignment: MainAxisAlignment.center,
-                      //         children: [
-                      //           // Icono a la izquierda
-                      //           Icon(
-                      //             Icons.chevron_left,
-                      //             size: 20.0,
-                      //             color: Colors.white,
-                      //           ),
-                      //           // Espacio entre el icono y el texto
-                      //           SizedBox(width: 4.0),
-                      //           // Columna para el texto "Medida" y el valor de la unidad
-                      //           Column(
-                      //             mainAxisSize: MainAxisSize.min,
-                      //             children: [
-                      //               Text(
-                      //                 "Unit", // Título encima del valor de la unidad
-                      //                 style: TextStyle(
-                      //                     fontSize: 12.0,
-                      //                     fontWeight: FontWeight.w600,
-                      //                     fontFamily: 'Geologica',
-                      //                     color: Colors.white),
-                      //               ),
-                      //               Text(
-                      //                 selectedUnit,
-                      //                 style: TextStyle(
-                      //                   fontSize: 16.0,
-                      //                   fontWeight: FontWeight.w800,
-                      //                   fontFamily: 'Geologica',
-                      //                   color: Colors.white,
-                      //                 ),
-                      //               ),
-                      //             ],
-                      //           ),
-                      //           // Espacio entre el texto y el icono
-                      //           SizedBox(width: 4.0),
-                      //           // Icono a la derecha
-                      //           Icon(
-                      //             Icons.chevron_right,
-                      //             color: Colors.white,
-                      //             size: 20.0,
-                      //           ),
-                      //         ],
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
+               
                   Padding(
   padding: const EdgeInsets.all(8.0),
   child: Container(
     decoration: BoxDecoration(
-      border: Border.all(
-        color: Colors.grey,
-        width: 1.0,
-      ),
+      color: Colors.blueGrey.shade400,
+      
       borderRadius: BorderRadius.circular(10),
     ),
     child: Row(
@@ -433,20 +360,20 @@ void dispose() {
           mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 15),
+              padding: const EdgeInsets.only(top: 12),
               child: Text(
                 "Assists",
                 style: TextStyle(
                   fontSize: 10,
                   fontFamily: 'Geologica',
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w800,
                   color: Colors.white,
                 ),
               ),
             ),
             Container(
               width: 35,
-              height: 35,
+              height: 40,
               // Reemplaza el TextField por el método _buildAssistsTextField
               child: _buildAssistsTextField(serieIndex),
             ),

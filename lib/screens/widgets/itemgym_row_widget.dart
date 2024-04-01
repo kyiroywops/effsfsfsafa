@@ -59,8 +59,8 @@ class _GymItemRowState extends ConsumerState<GymItemRow> {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontFamily: 'Geologica',
-                          fontSize: 12,
-                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                          fontSize: 11,
+                          fontWeight: isSelected ? FontWeight.w900 : FontWeight.w600,
                           color: isSelected ? Colors.brown : Colors.white,
                         ),
                         maxLines: 2, // Permite hasta dos líneas de texto.

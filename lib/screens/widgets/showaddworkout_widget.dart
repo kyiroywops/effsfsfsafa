@@ -170,12 +170,17 @@ class _AddWorkoutBottomSheetState extends ConsumerState<AddWorkoutBottomSheet> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text("Cancel",
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w700,
-                                          color: Colors.blue.shade700,
-                                          fontFamily: 'Geologica')),
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.pop(context); // Cierra el BottomSheet cuando se toque "Cancel"
+                                    },
+                                    child: Text("Cancel",
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w700,
+                                            color: Colors.blue.shade700,
+                                            fontFamily: 'Geologica')),
+                                  ),
                                   Text("Add quick exercise",
                                       style: TextStyle(
                                           fontSize: 20,
@@ -195,8 +200,8 @@ class _AddWorkoutBottomSheetState extends ConsumerState<AddWorkoutBottomSheet> {
                                       'Add',
                                       style: TextStyle(
                                         fontFamily: 'Geologica',
-                                        fontWeight: FontWeight.w800,
-                                        fontSize: 12,
+                                        fontWeight: FontWeight.w900,
+                                        fontSize: 14,
                                         color: Colors.black,
                                       ),
                                     ),
@@ -391,6 +396,7 @@ class _AddWorkoutBottomSheetState extends ConsumerState<AddWorkoutBottomSheet> {
                                 padding: EdgeInsets.symmetric(
                                     horizontal: 8.0, vertical: 4.0),
                                 decoration: BoxDecoration(
+                                  color: Colors.grey.shade500,
                                   border: Border.all(color: Colors.grey),
                                   borderRadius: BorderRadius.circular(12.0),
                                 ),
