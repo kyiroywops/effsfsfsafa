@@ -85,7 +85,6 @@ class _AddWorkoutBottomSheetState extends ConsumerState<AddWorkoutBottomSheet> {
         .fold<int>(0, (max, set) => set.weight > max ? set.weight : max);
 
     int recordSetWeightLowReps = validSets
-        .where((set) => set.reps < 6)
         .fold<int>(0, (max, set) => set.weight > max ? set.weight : max);
 
     List<Map<String, dynamic>> firestoreSets = validSets.map((set) {
@@ -145,7 +144,7 @@ class _AddWorkoutBottomSheetState extends ConsumerState<AddWorkoutBottomSheet> {
           : DraggableScrollableSheet(
               initialChildSize: 0.9,
               maxChildSize: 0.9,
-              minChildSize: 0.9,
+              minChildSize: 0.1,
               expand: false,
               builder: (_, controller) {
                 return Padding(
@@ -311,65 +310,55 @@ class _AddWorkoutBottomSheetState extends ConsumerState<AddWorkoutBottomSheet> {
                                       },
                                       optionsViewBuilder: (BuildContext context,
                                           AutocompleteOnSelected<Exercise> onSelected,
-                                          Iterable<Exercise> options) {
+                                          Iterable<Exercise> options) 
+                                          {
+
+                                         String languageCode = Localizations.localeOf(context).languageCode;
+                                          
                                         return Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Align(
-                                            alignment: Alignment.topCenter,
-                                            child: Material(
-                                              elevation: 4.0, // Añade algo de sombra
-                                              borderRadius: BorderRadius.circular(
-                                                  10.0), // Esquinas redondeadas
-                                              color: Colors
-                                                  .transparent, // Evita el fondo por defecto
-                                              child: Container(
-                                                width:
-                                                    300, // Ajusta esto según sea necesario para tu diseño
-                                                decoration: BoxDecoration(
-                                                  color: Colors
-                                                      .black, // Color de fondo del contenedor
-                                                  borderRadius: BorderRadius.circular(
-                                                      10.0), // Esquinas redondeadas
-                                                ),
-                                                child: Scrollbar(
-                                                  thickness:
-                                                      6.0, // Grosor de la barra de desplazamiento
-                                                  radius: Radius.circular(
-                                                      5.0), // Esquinas redondeadas para la barra de desplazamiento
-                                                  child: ListView(
-                                                    padding: EdgeInsets.zero,
-                                                    shrinkWrap: true,
-                                                    children: options
-                                                        .map((Exercise option) =>
-                                                            GestureDetector(
-                                                              onTap: () =>
-                                                                  onSelected(option),
-                                                              child: ListTile(
-                                                                title: Text(
-                                                                  option.name,
-                                                                  style: TextStyle(
-                                                                    color: Colors.white,
-                                                                    fontFamily:
-                                                                        'Geologica',
-                                                                    fontWeight:
-                                                                        FontWeight.w600,
-                                                                  ), // Texto claro
-                                                                ),
-                                                                leading: Image.asset(
-                                                                    'assets/images/icons/${option.exerciseIcon}',
-                                                                    width: 30,
-                                                                    height: 30),
-                                                              ),
-                                                            ))
-                                                        .toList(),
-                                                  ),
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Align(
+                                          alignment: Alignment.topCenter,
+                                          child: Material(
+                                            elevation: 4.0, // Añade algo de sombra
+                                            borderRadius: BorderRadius.circular(10.0), // Esquinas redondeadas
+                                            color: Colors.transparent, // Evita el fondo por defecto
+                                            child: Container(
+                                              width: 300, // Ajusta esto según sea necesario para tu diseño
+                                              decoration: BoxDecoration(
+                                                color: Colors.black, // Color de fondo del contenedor
+                                                borderRadius: BorderRadius.circular(10.0), // Esquinas redondeadas
+                                              ),
+                                              child: Scrollbar(
+                                                thickness: 6.0, // Grosor de la barra de desplazamiento
+                                                radius: Radius.circular(5.0), // Esquinas redondeadas para la barra de desplazamiento
+                                                child: ListView.builder(
+                                                  padding: EdgeInsets.all(10),
+                                                  itemCount: options.length,
+                                                  itemBuilder: (BuildContext context, int index) {
+                                                    final Exercise option = options.elementAt(index);
+
+                                                    // Obtiene la traducción basada en el idioma del dispositivo, default a inglés si no hay traducción
+                                                    String translatedName = option.translations[languageCode] ?? option.name;
+
+                                                    return GestureDetector(
+                                                      onTap: () => onSelected(option),
+                                                      child: ListTile(
+
+                                                        title: Text(option.name, style: TextStyle(color: Colors.white, fontFamily: 'Geologica', fontWeight: FontWeight.w600, fontSize: 14)), // Nombre en inglés
+                                                        subtitle: Text(translatedName, style: TextStyle(color: Colors.grey[200], fontFamily: 'Geologica', fontWeight: FontWeight.w400, fontSize: 12)), // Nombre traducido
+                                                        leading: Image.asset('assets/images/icons/${option.exerciseIcon}', width: 30, height: 30),
+                                                      ),
+                                                    );
+                                                  },
                                                 ),
                                               ),
                                             ),
                                           ),
-                                        );
-                                      },
-                                                            
+                                        ),
+                                      );
+                                    },
+                                                                                                
                                       onSelected: (Exercise selection) {
                                         setState(() {
                                           selectedExercise = selection;

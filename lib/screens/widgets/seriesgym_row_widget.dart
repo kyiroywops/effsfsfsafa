@@ -238,17 +238,17 @@ void dispose() {
                         bool isActive = innerEntry.value;
                         return GestureDetector(
                        
-    onPanUpdate: (details) {
-  // Aquí, calcula el índice del cuadrado basado en la posición del gesto
-  final index = calculateSquareIndex(details.localPosition);
-  if (index != -1) {
-   // Esto asume que tienes una lista de índices y solo quieres agregar índices nuevos
-final currentIndexList = ref.read(squareSelectionProvider.state).state;
-if (!currentIndexList.contains(index)) {
-  ref.read(squareSelectionProvider.state).state = [...currentIndexList, index];
-}
-  }
-},
+                        onPanUpdate: (details) {
+                      // Aquí, calcula el índice del cuadrado basado en la posición del gesto
+                      final index = calculateSquareIndex(details.localPosition);
+                      if (index != -1) {
+                      // Esto asume que tienes una lista de índices y solo quieres agregar índices nuevos
+                    final currentIndexList = ref.read(squareSelectionProvider.state).state;
+                    if (!currentIndexList.contains(index)) {
+                      ref.read(squareSelectionProvider.state).state = [...currentIndexList, index];
+                    }
+                      }
+                    },
 
                           onTap: () => _handleTap(serieIndex, index),
                           child: Container(

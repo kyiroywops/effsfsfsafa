@@ -11,6 +11,8 @@ class Exercise {
   final List<ExerciseSet> sets;
   final DateTime? timestamp;
   final int recordSetWeightLowReps;
+final Map<String, String> translations;
+
 
   Exercise({
     this.id = '',
@@ -21,11 +23,13 @@ class Exercise {
     required this.sets,
     this.timestamp,
     this.recordSetWeightLowReps = 0,
+    this.translations = const {},
   });
 
 factory Exercise.fromJson(Map<String, dynamic> json) {
   var setsList = json['sets'] as List? ?? [];
   var sets = setsList.map((set) => ExerciseSet.fromJson(set as Map<String, dynamic>)).toList();
+  var translations = json['translations'] as Map<String, dynamic>? ?? {};
 
   // Utiliza la clave 'icon' para obtener la ruta del ícono desde el JSON, ya que así es como está representado en tu JSON.
   var exerciseIcon = json['icon'] as String? ?? 'default_icon.png'; // Asegúrate de que 'default_icon.png' sea un valor válido por defecto.
@@ -41,6 +45,8 @@ factory Exercise.fromJson(Map<String, dynamic> json) {
     sets: sets,
     timestamp: json['timestamp'] != null ? DateTime.parse(json['timestamp'] as String) : null,
     recordSetWeightLowReps: json['recordSetWeightLowReps'] as int? ?? 0,
+    translations: translations.map((key, value) => MapEntry(key, value.toString())),
+
   );
 }
 
@@ -71,6 +77,8 @@ factory Exercise.fromJson(Map<String, dynamic> json) {
       'sets': sets.map((set) => set.toJson()).toList(),
       'timestamp': timestamp?.toIso8601String(),
       'recordSetWeightLowReps': recordSetWeightLowReps,
+      'translations': translations,
+
     };
   }
 }
