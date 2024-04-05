@@ -81,4 +81,17 @@ factory Exercise.fromJson(Map<String, dynamic> json) {
 
     };
   }
+Exercise copyWith({Map<String, String>? translations}) {
+    return Exercise(
+      id: this.id,
+      name: this.name,
+      exerciseIcon: this.exerciseIcon,
+      gymItem: this.gymItem,
+      unit: this.unit,
+      sets: this.sets,
+      timestamp: this.timestamp,
+      recordSetWeightLowReps: this.recordSetWeightLowReps,
+      translations: translations ?? this.translations,
+    );
+  }
 }
