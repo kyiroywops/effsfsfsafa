@@ -6,8 +6,11 @@ class StatsRepository {
 
   StatsRepository(this._firestore);
 
-  Future<Map<String, Exercise>> getHighestWeightRecords() async {
-    QuerySnapshot snapshot = await _firestore.collection('exercises').get();
+  Future<Map<String, Exercise>> getHighestWeightRecords(String userId) async {
+    QuerySnapshot snapshot = await _firestore
+        .collection('exercises')
+        .where('userId', isEqualTo: userId) // Agrega un filtro para buscar solo los documentos del usuario específico
+        .get();
 
     Map<String, Exercise> highestWeights = {};
     for (var doc in snapshot.docs) {

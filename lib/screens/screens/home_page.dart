@@ -56,20 +56,23 @@ class _HomeScreenState extends State<HomeScreen> {
   Key futureBuilderKey = UniqueKey(); // Paso 1
 
   void deleteExercise(BuildContext context, String documentId, DateTime date) {
-    FirebaseFirestore.instance
-        .collection('exercises')
-        .doc(documentId)
-        .delete()
-        .then((_) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Exercise deleted')));
-      setState(() {
-        futureBuilderKey = UniqueKey(); // Paso 2
+    try {
+      FirebaseFirestore.instance
+          .collection('exercises')
+          .doc(documentId)
+          .delete()
+          .then((_) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Exercise deleted succesfu')));
+        setState(() {
+          futureBuilderKey = UniqueKey(); // Esto reconstruirá el FutureBuilder
+        });
       });
-    }).catchError((error) {
+    } catch (e) {
+      print('Error al eliminar ejercicio: $e');
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('Failed to delete exercise')));
-    });
+    }
   }
 
   Widget buildExerciseCard(Exercise exercise, GymItem gymItem,
@@ -104,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
           margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: Colors.brown.shade300.withOpacity(0.20),
+            color: Colors.grey[900],
             borderRadius: BorderRadius.circular(15),
           ),
           child: Column(
@@ -116,8 +119,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Image.asset(
                       'assets/images/icons/${exercise.exerciseIcon}', // Ruta al ícono del ejercicio
-                      width: 30,
-                      height: 30,
+                      width: 40,
+                      height: 40,
                     ),
                     const SizedBox(width: 15),
                     Expanded(
@@ -128,7 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             exercise.name, // Nombre del ejercicio
                             style: const TextStyle(
                                 color: Colors.white,
-                                fontSize: 13,
+                                fontSize: 12,
                                 fontFamily: 'Geologica',
                                 fontWeight: FontWeight.w700),
                           ),
@@ -136,7 +139,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             gymItem.name, // Nombre del GymItem asociado
                             style: const TextStyle(
                                 color: Colors.grey,
-                                fontSize: 12,
+                                fontSize: 10,
                                 fontFamily: 'Geologica',
                                 fontWeight: FontWeight.w700),
                           ),
@@ -189,7 +192,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   color: Colors.green,
                                   fontSize: 10,
                                   fontFamily: 'Geologica',
-                                  fontWeight: FontWeight.w700),
+                                  fontWeight: FontWeight.w900),
                             ),
                             const SizedBox(
                                 width:
@@ -213,16 +216,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                   'Set ${setIndex + 1}',
                                   style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: 7,
+                                      fontSize: 10,
                                       fontFamily: 'Geologica',
                                       fontWeight: FontWeight.w900),
                                 ),
                               ),
                               Text(
-                                '${set.weight} KG, ${set.reps} reps',
+                                '${set.weight} KG [${set.reps}] reps',
                                 style: TextStyle(
-                                    color: Colors.grey.shade500,
-                                    fontSize: 7,
+                                    color: Colors.grey.shade400,
+                                    fontSize: 10,
                                     fontFamily: 'Geologica',
                                     fontWeight: FontWeight.w600),
                               ),
@@ -231,9 +234,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ' (${set.assists})',
                                   style: TextStyle(
                                       color: Colors.blueAccent,
-                                      fontSize: 7,
+                                      fontSize: 10,
                                       fontFamily: 'Geologica',
-                                      fontWeight: FontWeight.w700),
+                                      fontWeight: FontWeight.w900),
                                 ),
                             ],
                           );
@@ -302,7 +305,21 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Last trainings', // Título de la pantalla
+                  style: TextStyle(
+                    fontFamily: 'Geologica',
+                    color: Colors.teal.shade100,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 24, // Tamaño del texto
+                  ),
+                ),
+              ),
+            ),
             // Se reemplaza el Expanded con FutureBuilder
             Expanded(
               child: FutureBuilder<List<DailyWorkout>>(
@@ -310,7 +327,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 future: getExercisesGroupedByDate(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
+                    return Center(
+                            child: Container(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                
+                              ),
+                            ),
+                          );
                   } else if (snapshot.hasError) {
                     return Center(child: Text('Error: ${snapshot.error}'));
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {

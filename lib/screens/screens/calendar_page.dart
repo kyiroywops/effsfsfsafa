@@ -121,21 +121,9 @@ void initState() {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
           child: Column(
-            children: [
-               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 0.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Image.asset(
-                      'assets/images/logo.png', // Reemplaza con la ruta de tu logo.
-                      height: 50, // Ajusta la altura según sea necesario.
-                    ),
-                   
-                  ],
-                ),
-              ),
-          
+            children: [ 
+              SizedBox(height: 10),
+             
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Align(
@@ -144,7 +132,7 @@ void initState() {
                     'Next week training', // Título de la pantalla
                     style: TextStyle(
                       fontFamily: 'Geologica',
-                      color: Colors.white,
+                      color: Colors.teal.shade100,
                       fontWeight: FontWeight.w700,
                       fontSize: 24, // Tamaño del texto
                     ),
@@ -203,7 +191,7 @@ void initState() {
                     'Calendar', // Título de la pantalla
                     style: TextStyle(
                       fontFamily: 'Geologica',
-                      color: Colors.white,
+                      color: Colors.teal.shade100,
                       fontWeight: FontWeight.w700,
                       fontSize: 24, // Tamaño del texto
                     ),

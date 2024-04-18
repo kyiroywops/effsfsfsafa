@@ -11,44 +11,44 @@ class Exercise {
   final List<ExerciseSet> sets;
   final DateTime? timestamp;
   final int recordSetWeightLowReps;
-final Map<String, String> translations;
-
+  final int recordSetWeight; // Debes declarar esta nueva propiedad aquí
+  final Map<String, String> translations;
 
   Exercise({
     this.id = '',
     required this.name,
     required this.exerciseIcon,
     required this.gymItem,
-    this.unit = '', // Proporciona un valor predeterminado o hazlo required según tu caso de uso
+    this.unit = '',
     required this.sets,
     this.timestamp,
     this.recordSetWeightLowReps = 0,
+    this.recordSetWeight = 0, // Inicializa el nuevo campo aquí
     this.translations = const {},
   });
 
-factory Exercise.fromJson(Map<String, dynamic> json) {
-  var setsList = json['sets'] as List? ?? [];
-  var sets = setsList.map((set) => ExerciseSet.fromJson(set as Map<String, dynamic>)).toList();
-  var translations = json['translations'] as Map<String, dynamic>? ?? {};
+  factory Exercise.fromJson(Map<String, dynamic> json) {
+    var setsList = json['sets'] as List? ?? [];
+    var sets = setsList.map((set) => ExerciseSet.fromJson(set as Map<String, dynamic>)).toList();
+    var translations = json['translations'] as Map<String, dynamic>? ?? {};
 
-  // Utiliza la clave 'icon' para obtener la ruta del ícono desde el JSON, ya que así es como está representado en tu JSON.
-  var exerciseIcon = json['icon'] as String? ?? 'default_icon.png'; // Asegúrate de que 'default_icon.png' sea un valor válido por defecto.
+    var exerciseIcon = json['icon'] as String? ?? 'default_icon.png';
 
-  var gymItemJson = json['gymItem'] as Map<String, dynamic>? ?? {};
+    var gymItemJson = json['gymItem'] as Map<String, dynamic>? ?? {};
 
-  return Exercise(
-    id: json['id'] as String? ?? '',
-    name: json['name'] as String? ?? 'Default Name',
-    exerciseIcon: exerciseIcon, // Utiliza la variable exerciseIcon aquí.
-    gymItem: GymItem.fromJson(gymItemJson),
-    unit: json['unit'] as String? ?? '',
-    sets: sets,
-    timestamp: json['timestamp'] != null ? DateTime.parse(json['timestamp'] as String) : null,
-    recordSetWeightLowReps: json['recordSetWeightLowReps'] as int? ?? 0,
-    translations: translations.map((key, value) => MapEntry(key, value.toString())),
-
-  );
-}
+    return Exercise(
+      id: json['id'] as String? ?? '',
+      name: json['name'] as String? ?? 'Default Name',
+      exerciseIcon: exerciseIcon,
+      gymItem: GymItem.fromJson(gymItemJson),
+      unit: json['unit'] as String? ?? '',
+      sets: sets,
+      timestamp: json['timestamp'] != null ? DateTime.parse(json['timestamp'] as String) : null,
+      recordSetWeightLowReps: json['recordSetWeightLowReps'] as int? ?? 0,
+      recordSetWeight: json['recordSetWeight'] as int? ?? 0, // Nuevo campo aquí
+      translations: translations.map((key, value) => MapEntry(key, value.toString())),
+    );
+  }
 
   factory Exercise.fromFirestore(Map<String, dynamic> data, String documentId) {
     var sets = (data['sets'] as List).map((set) => ExerciseSet.fromJson(set)).toList();
@@ -60,10 +60,11 @@ factory Exercise.fromJson(Map<String, dynamic> json) {
         name: data['gymItemName'] ?? 'Default',
         iconPath: data['gymItemIconPath'] ?? 'default_icon.png',
       ),
-      unit: data['unit'] ?? '', // Asume que 'unit' está presente en los datos
+      unit: data['unit'] ?? '',
       sets: sets,
       timestamp: data['timestamp'] != null ? (data['timestamp'] as Timestamp).toDate() : null,
       recordSetWeightLowReps: data['recordSetWeightLowReps'] as int? ?? 0,
+      recordSetWeight: data['recordSetWeight'] as int? ?? 0, // Nuevo campo aquí
     );
   }
 
@@ -73,24 +74,37 @@ factory Exercise.fromJson(Map<String, dynamic> json) {
       'name': name,
       'exerciseIcon': exerciseIcon,
       'gymItem': gymItem.toJson(),
-      'unit': unit, // Incluye 'unit' al convertir a JSON
+      'unit': unit,
       'sets': sets.map((set) => set.toJson()).toList(),
       'timestamp': timestamp?.toIso8601String(),
       'recordSetWeightLowReps': recordSetWeightLowReps,
+      'recordSetWeight': recordSetWeight, // Asegúrate de incluir el nuevo campo aquí
       'translations': translations,
-
     };
   }
-Exercise copyWith({Map<String, String>? translations}) {
+
+  Exercise copyWith({
+    String? id,
+    String? name,
+    String? exerciseIcon,
+    GymItem? gymItem,
+    String? unit,
+    List<ExerciseSet>? sets,
+    DateTime? timestamp,
+    int? recordSetWeightLowReps,
+    int? recordSetWeight, // Debes incluir el nuevo campo como parámetro aquí
+    Map<String, String>? translations,
+  }) {
     return Exercise(
-      id: this.id,
-      name: this.name,
-      exerciseIcon: this.exerciseIcon,
-      gymItem: this.gymItem,
-      unit: this.unit,
-      sets: this.sets,
-      timestamp: this.timestamp,
-      recordSetWeightLowReps: this.recordSetWeightLowReps,
+      id: id ?? this.id,
+      name: name ?? this.name,
+      exerciseIcon: exerciseIcon ?? this.exerciseIcon,
+      gymItem: gymItem ?? this.gymItem,
+      unit: unit ?? this.unit,
+      sets: sets ?? this.sets,
+      timestamp: timestamp ?? this.timestamp,
+      recordSetWeightLowReps: recordSetWeightLowReps ?? this.recordSetWeightLowReps,
+      recordSetWeight: recordSetWeight ?? this.recordSetWeight, // Nuevo campo aquí
       translations: translations ?? this.translations,
     );
   }

@@ -437,12 +437,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                     borderRadius: BorderRadius.circular(8.0),
                                   ), // El color del texto e icono cuando se presiona el botón
                                 ),
-                                onPressed: () {
+                                onPressed: (
+                                  
+                                ) {
                                   // Tu lógica de autenticación con Facebook aquí
                                 },
                               ),
                             ),
                           ),
+                        
 
                           Padding(
                             padding: const EdgeInsets.all(30.0),
@@ -455,7 +458,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     Text(
                                       "Don't have an account? ",
                                       style: TextStyle(
-                                        color: Colors.grey[700],
+                                        color: Colors.grey[300],
                                         fontFamily: 'Geologica',
                                         fontWeight: FontWeight.w400,
                                         fontSize: 12,
@@ -470,7 +473,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         style: TextStyle(
                                           fontSize: 12,
                                           fontWeight: FontWeight.w900,
-                                          color: Colors.brown[500],
+                                          color: Colors.teal.shade100,
                                           fontFamily: 'Geologica',
                                         ),
                                       ),
@@ -484,8 +487,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                   child: Text(
                                     "Forgot your password?",
                                     style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.brown[500],
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.teal.shade100,
                                       fontSize: 12,
 
                                     ),

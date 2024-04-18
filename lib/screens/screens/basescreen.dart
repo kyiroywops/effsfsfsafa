@@ -41,10 +41,10 @@ class _BaseScreenState extends State<BaseScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            _buildNavItem(Icons.book, 'Historial', 0),
-            _buildNavItem(Icons.calendar_today, 'Calendar', 1),
+            _buildNavItem(Icons.history_rounded, 'Historial', 0),
+            _buildNavItem(Icons.calendar_month_rounded, 'Calendar', 1),
             _buildUploadNavItem(), // Botón central con ícono relleno siempre visible
-            _buildNavItem(Icons.bar_chart, 'Stats', 3),
+            _buildNavItem(Icons.query_stats_rounded, 'Stats', 3),
             _buildNavItem(Icons.person, 'Profile', 4),
           ],
         ),
@@ -62,8 +62,18 @@ class _BaseScreenState extends State<BaseScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Icon(icon, size: 24, color: _selectedIndex == index ? Colors.white : Colors.grey),
-            Text(label, style: TextStyle(color: _selectedIndex == index ? Colors.white : Colors.grey, fontSize: 10)),
+            Icon(icon, size: 24, color: _selectedIndex == index ? Colors.teal.shade100 : Colors.grey),
+            Text(label, style: TextStyle(
+              color: _selectedIndex == index ? Colors.white : Colors.grey,
+              fontSize: _selectedIndex == index ? 11 : 9,
+              fontWeight: _selectedIndex == index ? FontWeight.w800 : FontWeight.w600,
+              fontFamily: 'Geologica',
+
+              
+              ),
+              
+              
+              ),
           ],
         ),
       ),

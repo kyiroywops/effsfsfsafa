@@ -49,7 +49,7 @@ class _GymItemRowState extends ConsumerState<GymItemRow> {
                 children: [
                   CircleAvatar(
                     radius: 25,
-                    backgroundColor: Colors.white,
+                    backgroundColor: Colors.teal.shade100.withOpacity(isSelected ? 1 : 0.4),
                     child: Image.asset(gymItems[index].iconPath),
                   ),
                   Expanded(
@@ -59,9 +59,9 @@ class _GymItemRowState extends ConsumerState<GymItemRow> {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontFamily: 'Geologica',
-                          fontSize: 11,
+                          fontSize: isSelected ? 12 : 10,
                           fontWeight: isSelected ? FontWeight.w900 : FontWeight.w600,
-                          color: isSelected ? Colors.brown : Colors.white,
+                          color: isSelected ? Colors.teal.shade100 : Colors.white,
                         ),
                         maxLines: 2, // Permite hasta dos líneas de texto.
                         overflow: TextOverflow.clip, // Evita puntos suspensivos y cortes innecesarios.
