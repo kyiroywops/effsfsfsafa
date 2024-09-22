@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 
 class AppTheme {
   ThemeData get themeData => ThemeData(
+    scaffoldBackgroundColor: Colors.black,
     colorScheme: ColorScheme.fromSeed(
       seedColor: Colors.deepPurple,
       primary: const Color(0xFF2a3745), // Azul Oscuro Profundo

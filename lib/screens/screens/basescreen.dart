@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gymtrack/screens/screens/calendar_page.dart';
 import 'package:gymtrack/screens/screens/home_page.dart';
 import 'package:gymtrack/screens/screens/profile_page.dart';
-import 'package:gymtrack/screens/screens/stats_page.dart';
-import 'package:gymtrack/screens/widgets/showaddworkout_widget.dart';
+import 'package:gymtrack/screens/widgets/showbottomsheetwave.dart';
 
 class BaseScreen extends StatefulWidget {
   @override
@@ -14,22 +14,13 @@ class _BaseScreenState extends State<BaseScreen> {
   int _selectedIndex = 0;
   static List<Widget> _widgetOptions = <Widget>[
     HomeScreen(), // Historial
-    CalendarScreen(),
+    Ejercicios(),
     Text('Calendario', textAlign: TextAlign.center), // Calendario
-    StatsScreen(),
+    Text('Calendario', textAlign: TextAlign.center), // Calend
     ProfileScreen(), // Perfil
   ];
 
-   void _onItemTapped(int index) {
-    if (index == 2) { // Si el índice corresponde al botón "+"
-      showAddWorkoutBottomSheet(context);
-    } else {
-      setState(() {
-        _selectedIndex = index;
-      });
-    }
-  }
-
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,22 +32,54 @@ class _BaseScreenState extends State<BaseScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            _buildNavItem(Icons.history_rounded, 'Historial', 0),
-            _buildNavItem(Icons.calendar_month_rounded, 'Calendar', 1),
+            _buildNavItem('assets/svg/home.svg', 'Home', 0),
+            _buildNavItem('assets/svg/biceps.svg', 'Exercises', 1),
             _buildUploadNavItem(), // Botón central con ícono relleno siempre visible
-            _buildNavItem(Icons.query_stats_rounded, 'Stats', 3),
-            _buildNavItem(Icons.person, 'Profile', 4),
+            _buildNavItem('assets/svg/message.svg', 'Message', 3),
+            _buildNavItemWithIcon(Icons.person, 'Profile', 4), // Mantén el ícono para el perfil
           ],
         ),
       ),
     );
   }
 
-  Widget _buildNavItem(IconData icon, String label, int index) {
+  // Método para construir elementos de navegación con SVG
+  Widget _buildNavItem(String svgAsset, String label, int index) {
     return InkWell(
       onTap: () => setState(() => _selectedIndex = index),
-      splashColor: Colors.transparent, // Removes ripple effect
-      highlightColor: Colors.transparent, // Removes highlight effect
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
+      child: Container(
+        width: 60, // Ancho para cada botón de icono
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            SvgPicture.asset(
+              svgAsset,
+              height: 24,
+              color: _selectedIndex == index ? Colors.teal.shade100 : Colors.grey,
+            ),
+            Text(
+              label,
+              style: TextStyle(
+                color: _selectedIndex == index ? Colors.white : Colors.grey,
+                fontSize: _selectedIndex == index ? 11 : 9,
+                fontWeight: _selectedIndex == index ? FontWeight.w800 : FontWeight.w600,
+                fontFamily: 'Geologica',
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Método para el ícono del perfil (mantienes el ícono predeterminado)
+  Widget _buildNavItemWithIcon(IconData icon, String label, int index) {
+    return InkWell(
+      onTap: () => setState(() => _selectedIndex = index),
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
       child: Container(
         width: 60, // Ancho para cada botón de icono
         child: Column(
@@ -65,53 +88,52 @@ class _BaseScreenState extends State<BaseScreen> {
             Icon(icon, size: 24, color: _selectedIndex == index ? Colors.teal.shade100 : Colors.grey),
             Text(label, style: TextStyle(
               color: _selectedIndex == index ? Colors.white : Colors.grey,
-              fontSize: _selectedIndex == index ? 11 : 9,
-              fontWeight: _selectedIndex == index ? FontWeight.w800 : FontWeight.w600,
+              fontSize: _selectedIndex == index ? 10 : 8,
+              fontWeight: _selectedIndex == index ? FontWeight.w700 : FontWeight.w400,
               fontFamily: 'Geologica',
-
-              
-              ),
-              
-              
-              ),
+            )),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildUploadNavItem() {
+  // Método para el botón de subir entrenamientos con SVG
+Widget _buildUploadNavItem() {
   return InkWell(
     onTap: () {
-      // Aquí llamas a tu función para mostrar el BottomSheet
-      try {
-  showAddWorkoutBottomSheet(context);
-} catch (e, stack) {
-  print('Error al mostrar AddWorkoutBottomSheet: $e');
-  print(stack);
-}
-
+      showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return BottomSheetWave(
+            title: 'Timmy',
+            subtitle: 'Tell me what you want to train today',
+          );
+        },
+      );
     },
-    splashColor: Colors.transparent, // Esto quita el efecto de onda al tocar
-    highlightColor: Colors.transparent, // Esto quita el efecto de realce al tocar
-    child: Container(
-      width: 60, // Ajustar el ancho si es necesario para el elemento del medio
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Container(
-            padding: EdgeInsets.all(4),
-            decoration: BoxDecoration(
-              color: Colors.white, // Fondo blanco para el botón de acción
-              shape: BoxShape.circle,
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
+      child: Container(
+        width: 60,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade300.withOpacity(0.8), // Fondo blanco para el botón de acción
+                shape: BoxShape.circle,
+              ),
+              child: SvgPicture.asset(
+                'assets/svg/wave.svg', // Cambiado a imagen SVG
+                height: 24,
+              ),
             ),
-            child: Icon(Icons.add, size: 24, color: Colors.black), // Ícono negro siempre visible
-          ),
-          Text('Training', style: TextStyle(color: Colors.white, fontSize: 10)), // Texto siempre visible
-        ],
+            Text('Training', style: TextStyle(color: Colors.white, fontSize: 10)), // Texto siempre visible
+          ],
+        ),
       ),
-    ),
-  );
-}
-
+    );
+  }
 }

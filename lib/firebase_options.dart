@@ -58,11 +58,12 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAA9SfvDrF-Z3PMcs2SGl8FQRzficumLno',
-    appId: '1:456103746725:ios:b1df534468878f2cb8414c',
+    apiKey: 'AIzaSyDwZc7_J0sZiAtVZrAdizfP7V4NAEjcQTI',
+    appId: '1:456103746725:ios:e563d0b6e7b4d5d0b8414c',
     messagingSenderId: '456103746725',
     projectId: 'gymtrackapp-a2e77',
     storageBucket: 'gymtrackapp-a2e77.appspot.com',
-    iosBundleId: 'com.example.gymtrack',
+    iosBundleId: 'com.tryagain.gymtrack',
   );
+
 }

@@ -3,13 +3,13 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyAA9SfvDrF-Z3PMcs2SGl8FQRzficumLno</string>
+	<string>AIzaSyDwZc7_J0sZiAtVZrAdizfP7V4NAEjcQTI</string>
 	<key>GCM_SENDER_ID</key>
 	<string>456103746725</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.gymtrack</string>
+	<string>com.tryagain.gymtrack</string>
 	<key>PROJECT_ID</key>
 	<string>gymtrackapp-a2e77</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:456103746725:ios:b1df534468878f2cb8414c</string>
+	<string>1:456103746725:ios:e563d0b6e7b4d5d0b8414c</string>
 </dict>
 </plist>
