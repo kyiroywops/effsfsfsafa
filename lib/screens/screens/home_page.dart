@@ -74,7 +74,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                 ),
                 Divider(
-                  color: Colors.grey.shade800,
+                  color: Colors.grey.shade800.withOpacity(0.5),
+                  endIndent: 20,
+                  indent: 20,
                   thickness: 1,
                 ),
                 SizedBox(height: 10),
@@ -150,10 +152,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             child: CircleAvatar(
                               radius: 33,
                               backgroundColor:
-                                  Colors.grey.shade700, // Borde gris
+                                  Colors.grey.shade900.withOpacity(0.9), // Borde gris
                               child: CircleAvatar(
                                 radius:
-                                    31, // Tamaño interno para crear el borde
+                                    30, // Tamaño interno para crear el borde
                                 backgroundImage: AssetImage(
                                     'assets/images/icons/biceps1.png'),
                               ),
@@ -167,9 +169,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             child: CircleAvatar(
                               radius: 33,
                               backgroundColor:
-                                  Colors.grey.shade700, // Borde gris
+                                  Colors.grey.shade900.withOpacity(0.9), // Borde gris
                               child: CircleAvatar(
-                                radius: 31,
+                                radius: 30,
                                 backgroundImage: AssetImage(
                                     'assets/images/icons/triceps1.png'),
                               ),
@@ -183,9 +185,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             child: CircleAvatar(
                               radius: 33,
                               backgroundColor:
-                                  Colors.grey.shade700, // Borde gris
+                                  Colors.grey.shade900.withOpacity(0.9), // Borde gris
                               child: CircleAvatar(
-                                radius: 31,
+                                radius: 30,
                                 backgroundImage: AssetImage(
                                     'assets/images/icons/pecho1.png'),
                               ),
@@ -199,9 +201,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             child: CircleAvatar(
                               radius: 33,
                               backgroundColor:
-                                  Colors.grey.shade700, // Borde gris
+                                  Colors.grey.shade800, // Borde gris
                               child: CircleAvatar(
-                                radius: 31,
+                                radius: 30,
                                 backgroundImage: AssetImage(
                                     'assets/images/icons/hombros1.png'),
                               ),
@@ -218,99 +220,103 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 Text(
                   'Select a muscle group to start!',
                   style: GoogleFonts.manjari(
-                    fontSize: 20,
-                    color: Colors.grey.shade300,
-                    fontWeight: FontWeight.w800,
+                    fontSize: 19,
+                    color: Colors.grey.shade100,
+                    fontWeight: FontWeight.w700,
                   ),
                 
                 ),
+                SizedBox(height: 10,),
                 Text(
                   'No exercises added yet',
                   style: GoogleFonts.manjari(
-                    fontSize: 20,
-                    color: Colors.grey.shade800,
-                    fontWeight: FontWeight.w400,
+                    fontSize: 18,
+                    color: Colors.grey.shade600,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
                 SizedBox(
                   height: 30,
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    width: double.infinity,
-                    height: 150,
-                    decoration: BoxDecoration(
-                      color: Colors.deepPurple.shade400.withOpacity(0.3),
-                      borderRadius: BorderRadius.circular(20),
+              Padding(
+  padding: const EdgeInsets.all(8.0),
+  child: Container(
+    width: double.infinity,
+    height: 150,
+    decoration: BoxDecoration(
+      image: DecorationImage(
+        image: AssetImage('assets/images/fondo.png'),
+        fit: BoxFit.cover,
+      ),
+      borderRadius: BorderRadius.circular(20),
+    ),
+    child: Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                width: 200,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'Add your first exercise',
+                        style: GoogleFonts.manjari(
+                          fontSize: 25,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
                     ),
-                    child: 
-                    Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                width: 200,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        'Add your first exercise',
-                                        style: GoogleFonts.manjari(
-                                          fontSize: 25,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w800,
-                                        ),
-                                        ),
-                                    ),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey.shade400.withOpacity(0.2),
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          'Add your first exercise',
-                                          style: GoogleFonts.manjari(
-                                            fontSize: 15,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w800,
-                                          ),
-                                        )
-                                      )
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(15.0),
-                              child: Container(
-                                width: 30,
-                                height: 30,
-                                decoration: BoxDecoration(
-                                  color: Colors.deepPurple.shade400.withOpacity(0.5),
-                                  borderRadius: BorderRadius.circular(50),
-                                ),
-                                child: Icon(
-                                  FontAwesomeIcons.chevronRight,
-                                  color: Colors.white,
-                                  size: 15,
-                                ),
-                              ),
-                            )
-                          ],
-                        )
-                      ],
-                    )
-                  ),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade400.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(15, 8,15, 5),
+                        child: Text(
+                          'Don\'t lose your strikes!',
+                          style: GoogleFonts.manjari(
+                            fontSize: 15,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Container(
+                width: 30,
+                height: 30,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade400.withOpacity(0.7),
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                child: Icon(
+                  FontAwesomeIcons.chevronRight,
+                  color: Colors.white,
+                  size: 17,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    ),
+  ),
+),
+
                 SizedBox(width: 10,),
         Padding(
           padding: const EdgeInsets.all(8.0),
