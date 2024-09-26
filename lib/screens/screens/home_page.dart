@@ -36,10 +36,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     children: [
                       Image.asset(
                         'assets/images/logo.png',
-                        height: 50,
+                        height: 55,
                       ),
-                      Row(
-                        children: [
                           Text(
                             'Good day, ${user?.displayName ?? 'User'}!',
                             style: GoogleFonts.manjari(
@@ -48,10 +46,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               fontWeight: FontWeight.w800,
                             ),
                           ),
-                          SizedBox(width: 10),
+                      Row(
+                        children: [
                           Padding(
                             padding: const EdgeInsets.only(right: 5),
                             child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   '0',
@@ -386,37 +386,94 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 ),
 
                 SizedBox(width: 10,),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              Expanded(
-                child: Padding(
-          padding: const EdgeInsets.only(right: 8.0), // Espacio a la derecha del primer container
+      Padding(
+  padding: const EdgeInsets.all(8.0),
+  child: Row(
+    children: [
+       Expanded(
+        child: Padding(
+          padding: const EdgeInsets.only(left: 8.0),
           child: Container(
-            height: 150, // Puedes ajustar la altura
+            height: 100,
             decoration: BoxDecoration(
-              color: Colors.grey.shade700.withOpacity(0.3), // Color de fondo
-              borderRadius: BorderRadius.circular(30), // Bordes redondeados
+              color: Colors.grey.shade600.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(15),
             ),
-          ),
-                ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 10),
+                  Text(
+                    'Daily PR',
+                    style: GoogleFonts.manjari(
+                      fontSize: 16,
+                      color: Colors.grey.shade600,
+                      
+                      fontWeight: FontWeight.w800,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 5),
+                  Text(
+                    '0.00 KG',
+                    style: GoogleFonts.manjari(
+                      fontSize: 22,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w800,)
+                  ), 
+                ],
               ),
-              Expanded(
-                child: Padding(
-          padding: const EdgeInsets.only(left: 8.0), // Espacio a la izquierda del segundo container
-          child: Container(
-            height: 150, // Ajusta la altura
-            decoration: BoxDecoration(
-              color: Colors.grey.shade700.withOpacity(0.3), // Color de fondo
-              borderRadius: BorderRadius.circular(30), // Bordes redondeados
             ),
-          ),
-                ),
-              ),
-            ],
           ),
         ),
+      ),
+      Expanded(
+        child: Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: Container(
+            height: 100,
+            decoration: BoxDecoration(
+              color: Colors.grey.shade600.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 10),
+                  Text(
+                    'Record PR',
+                    style: GoogleFonts.manjari(
+                      fontSize: 16,
+                      color: Colors.grey.shade600,
+                      
+                      fontWeight: FontWeight.w800,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 5),
+                  Text(
+                    '0.00 KG',
+                    style: GoogleFonts.manjari(
+                      fontSize: 22,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w800,)
+                  ), 
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    ],
+  ),
+),
+
        
               
               ],
