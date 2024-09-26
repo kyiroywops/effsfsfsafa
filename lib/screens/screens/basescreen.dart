@@ -50,42 +50,48 @@ class _BaseScreenState extends State<BaseScreen> {
     );
   }
 
-  // Método para construir elementos de navegación con SVG
   Widget _buildNavItem(String? svgAsset, String label, int index, [String? photoURL]) {
-    return InkWell(
-      onTap: () => setState(() => _selectedIndex = index),
-      splashColor: Colors.transparent,
-      highlightColor: Colors.transparent,
-      child: Container(
-        width: 60, // Ancho para cada botón de icono
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            if (photoURL != null) // Si se pasa la URL de la foto de perfil, mostrar la foto
-              CircleAvatar(
-                radius: 12, // Radio del avatar
-                backgroundImage: NetworkImage(photoURL),
-              )
-           else if (svgAsset != null) // Si no hay foto, mostrar el icono
+  return InkWell(
+    onTap: () => setState(() => _selectedIndex = index),
+    splashColor: Colors.transparent,
+    highlightColor: Colors.transparent,
+    child: Container(
+      width: 60, // Ancho para cada botón de icono
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          if (photoURL != null && photoURL.isNotEmpty) // Si hay una URL de foto válida
+            CircleAvatar(
+              radius: 16, // Radio del avatar
+              backgroundImage: NetworkImage(photoURL),
+            )
+          else if (index == 4) // Si no hay foto y es el perfil, mostrar 'profile.svg'
+            SvgPicture.asset(
+              'assets/svg/profile.svg',
+              height: 30,
+              color: _selectedIndex == index ? Colors.teal.shade100 : Colors.grey,
+            )
+          else if (svgAsset != null) // Si no hay foto, mostrar el ícono SVG
             SvgPicture.asset(
               svgAsset,
-              height: 24,
+              height: 30,
               color: _selectedIndex == index ? Colors.teal.shade100 : Colors.grey,
             ),
-            Text(
-              label,
-              style: TextStyle(
-                color: _selectedIndex == index ? Colors.white : Colors.grey,
-                fontSize: _selectedIndex == index ? 11 : 9,
-                fontWeight: _selectedIndex == index ? FontWeight.w800 : FontWeight.w600,
-                fontFamily: 'Geologica',
-              ),
+          Text(
+            label,
+            style: TextStyle(
+              color: _selectedIndex == index ? Colors.white : Colors.grey,
+              fontSize: _selectedIndex == index ? 11 : 9,
+              fontWeight: _selectedIndex == index ? FontWeight.w800 : FontWeight.w600,
+              fontFamily: 'Geologica',
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   // Método para el ícono del perfil (mantienes el ícono predeterminado)
   Widget _buildNavItemWithIcon(IconData icon, String label, int index) {
@@ -135,12 +141,12 @@ Widget _buildUploadNavItem() {
             Container(
               padding: EdgeInsets.all(4),
               decoration: BoxDecoration(
-                color: Colors.grey.shade300.withOpacity(0.8), // Fondo blanco para el botón de acción
+                color: Colors.grey.shade100.withOpacity(0.8), // Fondo blanco para el botón de acción
                 shape: BoxShape.circle,
               ),
               child: SvgPicture.asset(
-                'assets/svg/wave.svg', // Cambiado a imagen SVG
-                height: 24,
+                'assets/svg/mic.svg', // Cambiado a imagen SVG
+                height: 34,
               ),
             ),
             Text('Training', style: TextStyle(color: Colors.white, fontSize: 10)), // Texto siempre visible

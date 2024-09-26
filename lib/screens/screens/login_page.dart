@@ -1,10 +1,15 @@
-import 'dart:ui';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
-// Asegúrate de tener los paquetes necesarios para la autenticación de Google y Facebook.
+import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'dart:ui';
+
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({Key? key}) : super(key: key);
@@ -15,19 +20,108 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController rePasswordController = TextEditingController();
 
   bool isEmailEntered = false;
+  bool _isAgreeChecked = false;
+  bool isSignUp = false;
   bool _passwordVisible = false;
+  bool isEmailValid = true;
 
-  final TextEditingController passwordController = TextEditingController();
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    nameController.dispose();
+    rePasswordController.dispose();
+    super.dispose();
+  }
+
+  void _validateEmail() {
+    setState(() {
+      isEmailValid = emailController.text.contains('@');
+    });
+
+    if (!isEmailValid) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please enter a valid email address.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  Future<void> _resetPassword(String email) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('A password reset link has been sent to your email.'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } on FirebaseAuthException catch (e) {
+      String message;
+      if (e.code == 'user-not-found') {
+        message = 'No user found for that email.';
+      } else {
+        message = 'An error occurred while trying to reset the password.';
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  Future<void> _signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      if (googleUser == null) {
+        return;
+      }
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+
+      if (userCredential.user != null) {
+        String? name = userCredential.user?.displayName;
+        String? photoUrl = userCredential.user?.photoURL;
+        String uid = userCredential.user!.uid;
+
+        await FirebaseFirestore.instance.collection('users').doc(uid).set({
+          'name': name,
+          'photoUrl': photoUrl,
+          'email': userCredential.user?.email,
+        });
+
+        context.go('/home');
+      }
+    } on FirebaseAuthException catch (e) {
+      print('Error de FirebaseAuth: ${e.message}');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to sign in with Google: ${e.message}')));
+    } catch (e) {
+      print('Error desconocido: $e');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to sign in with Google')));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    double frostedContainerTopPosition =
-        MediaQuery.of(context).size.height * 0.3;
+    double frostedContainerTopPosition = MediaQuery.of(context).size.height * 0.32;
     double paddingVertical = 20; // El padding vertical de tu contenedor
-    double titleTopPosition =
-        frostedContainerTopPosition - 60; // Sube el título más arriba
+    double titleTopPosition = frostedContainerTopPosition - 60; // Sube el título más arriba
 
     return Scaffold(
       body: Stack(
@@ -36,7 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/images/background.png'),
+                image: AssetImage('assets/images/background.webp'),
                 fit: BoxFit.cover,
               ),
             ),
@@ -46,177 +140,462 @@ class _LoginScreenState extends State<LoginScreen> {
             top: 40,
             left: 10,
             child: IconButton(
-              icon: Icon(Icons.arrow_back, color: Colors.white),
+              icon: Icon(FontAwesomeIcons.circleChevronLeft, color: Colors.grey.shade100, size: 22),
               onPressed: () {
-                Navigator.of(context).pop();
               },
             ),
           ),
           Positioned(
-            top: titleTopPosition -
-                110, // Ajusta la posición vertical según sea necesario
+            top: titleTopPosition - 120, // Ajusta la posición vertical según sea necesario
             left: 0,
             right: 0,
             child: Center(
               child: Image.asset(
                 'assets/images/logo.png', // Ruta del logo
-                height: 100, // Ajusta el tamaño según tus necesidades
+                height: 70, // Ajusta el tamaño según tus necesidades
               ),
             ),
           ),
           Positioned(
             top: titleTopPosition,
-            left: 55,
-            child: isEmailEntered
+            left: 25,
+            child: isEmailEntered || isSignUp
                 ? Row(
                     children: [
                       IconButton(
-                        icon: Icon(Icons.arrow_back, color: Colors.white),
+                        icon: Icon(FontAwesomeIcons.circleChevronLeft, color: Colors.grey.shade100),
                         onPressed: () {
                           setState(() {
-                            isEmailEntered =
-                                false; // Esto permitirá al usuario volver al estado anterior
+                            isEmailEntered = false; // Esto permitirá al usuario volver al estado anterior
+                            isSignUp = false; // Regresa al estado inicial
                           });
                         },
                       ),
                       Text(
-                        'Log in',
-                        style: TextStyle(
+                        isSignUp ? 'Sign Up' : 'Log in',
+                        style: GoogleFonts.outfit(
                             color: Colors.white,
                             fontSize: 40,
-                            fontFamily: 'Geologica',
                             fontWeight: FontWeight.w900),
                       ),
                     ],
                   )
-                : Text('Hi!',
-                    style: TextStyle(
+                : Text('Hello!',
+                    style: GoogleFonts.outfit(
                         color: Colors.white,
-                        fontFamily: 'Geologica',
                         fontSize: 40,
+                         shadows: 
+                            [
+                              Shadow(
+                                color: Colors.black,
+                                offset: Offset(2, 2),
+                                blurRadius: 2,
+                              ),
+                            ],
                         fontWeight: FontWeight.w900)),
           ),
           // Container con efecto "frosted"
           Positioned(
-              top:
-                  frostedContainerTopPosition, // Posición calculada para el contenedor
+              top: frostedContainerTopPosition, // Posición calculada para el contenedor
               left: 20,
               right: 20, // Agrega esto para tener un margen en ambos lados
+
               child: ClipRRect(
-                // Asegura que el filtro se aplique dentro de los bordes redondeados
                 borderRadius: BorderRadius.circular(25),
                 child: BackdropFilter(
-                  filter: ImageFilter.blur(
-                      sigmaX: 5,
-                      sigmaY:
-                          5), // Ajusta los valores de sigma para aumentar o disminuir el efecto de desenfoque
+                  filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                   child: Container(
                     padding: EdgeInsets.fromLTRB(30, 25, 30, 20),
                     decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(
-                          0.1), // Cambia el color aquí a gris con cierta transparencia
+                      color: Colors.grey.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(25),
                     ),
                     child: Column(
                       children: <Widget>[
-                        if (!isEmailEntered) ...[
-                         TextFormField(
-  validator: (value) {
-    if (value == null || value.isEmpty || !value.contains('@')) {
-      return 'Please enter a valid email address.';
-    }
-    return null;
-  },
-  controller: emailController,
-  keyboardType: TextInputType.emailAddress,
-  cursorColor: Colors.black, // Color del cursor
-  style: TextStyle(
-    fontSize: 12,
-    fontFamily: 'Geologica',
-    color: Colors.grey.shade900,
-    fontWeight: FontWeight.w600
-  ),
+                        if (isSignUp) ...[
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text('Name', 
+                                style: GoogleFonts.outfit(
+                                  color: Colors.grey.shade200,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                )
+                              
+                              )),
+                          ),
+                          TextFormField(
+                            controller: nameController,
+                            keyboardType: TextInputType.text,
+                            cursorColor: Colors.black,
+                            style: GoogleFonts.outfit(
+                              fontSize: 12,
+                              color: Colors.grey.shade900,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.grey[200],
+                              hintText: 'Name',
+                              contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                                borderSide: BorderSide(
+                                  color: Colors.black,
+                                  width: 3.0,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                                borderSide: BorderSide(
+                                  color: Colors.grey[200]!,
+                                  width: 1.0,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 5),
+                           Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text('Email', 
+                                style: GoogleFonts.outfit(
+                                  color: Colors.grey.shade200,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                )
+                              
+                              )),
+                          ),
+                          TextFormField(
+                            validator: (value) {
+                              if (value == null || value.isEmpty || !value.contains('@')) {
+                                return 'Please enter a valid email address.';
+                              }
+                              return null;
+                            },
+                            controller: emailController,
+                            keyboardType: TextInputType.emailAddress,
+                            cursorColor: Colors.black,
+                            style: GoogleFonts.outfit(
+                              fontSize: 12,
+                              color: Colors.grey.shade900,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.grey[200],
+                              hintText: 'Email',
+                              contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                                borderSide: BorderSide(
+                                  color: Colors.black,
+                                  width: 3.0,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                                borderSide: BorderSide(
+                                  color: Colors.grey[200]!,
+                                  width: 1.0,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 5),
+                           Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text('Password', 
+                                style: GoogleFonts.outfit(
+                                  color: Colors.grey.shade200,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                )
+                              
+                              )),
+                          ),
+                          TextField(
+                            style: GoogleFonts.outfit(
+                              fontSize: 12,
+                              color: Colors.grey.shade900,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            controller: passwordController,
+                            keyboardType: TextInputType.text,
+                            obscureText: true,
+                            cursorColor: Colors.black,
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.grey[200],
+                              hintText: 'Password',
+                              contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                                borderSide: BorderSide(
+                                  color: Colors.black,
+                                  width: 3.0,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                                borderSide: BorderSide(
+                                  color: Colors.grey[200]!,
+                                  width: 1.0,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 5),
+                           Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text('Re-enter Password', 
+                                style: GoogleFonts.outfit(
+                                  color: Colors.grey.shade200,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                )
+                              
+                              )),
+                          ),
+                          TextField(
+                            controller: rePasswordController,
+                            keyboardType: TextInputType.text,
+                            obscureText: true,
+                            cursorColor: Colors.black,
+                            style: GoogleFonts.outfit(
+                              fontSize: 12,
+                              color: Colors.grey.shade900,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.grey[200],
+                              hintText: 'Re-enter Password',
+                              contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                                borderSide: BorderSide(
+                                  color: Colors.black,
+                                  width: 3.0,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                                borderSide: BorderSide(
+                                  color: Colors.grey[200]!,
+                                  width: 1.0,
+                                ),
+                              ),
+                            ),
+                          ),
+                       
+                          SizedBox(height: 20),
+                          Row(
+                            children: [
+                              Checkbox(
 
-  decoration: InputDecoration(
-    filled: true,
-    fillColor: Colors.grey[200],
-    hintText: 'Email',
-    contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0), // Ajusta el padding aquí para reducir la altura
-    // Personaliza la apariencia del borde en foco
-    focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(8.0),
-      borderSide: BorderSide(
-        color: Colors.black, // Borde negro cuando el TextField está en foco
-        width: 3.0, // Grosor del borde
-      ),
-    ),
-    // Personaliza la apariencia del borde cuando el TextField está sin foco
-    enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(8.0),
-      borderSide: BorderSide(
-        color: Colors.grey[200]!, // Borde gris claro en el estado normal
-        width: 1.0, // Grosor estándar del borde
-      ),
-    ),
-  ),
-),
+                                activeColor: Colors.green,
+                                checkColor: Colors.grey.shade400,
+                                value: _isAgreeChecked,
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                    _isAgreeChecked = value ?? false;
+                                  });
+                                },
+                              ),
+                              Expanded(
+                                child: RichText(
+                                  text: TextSpan(
+                                    style: GoogleFonts.outfit(
+                                      fontSize: 12,
+                                      color: Colors.grey.shade400,
+                                    ),
+                                    children: [
+                                      TextSpan(text: "By selecting Sign Up, you accept our "),
+                                      TextSpan(
+                                        text: "Terms of Service",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.blue,
+                                        ),
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () {
+                                            launch('https://www.tryagain.app/termsofservice/morehabits');
+                                          },
+                                      ),
+                                      TextSpan(text: " and confirm that you have reviewed our "),
+                                      TextSpan(
+                                        text: "Privacy Policy,",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.blue,
+                                        ),
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () {
+                                            launch('https://www.tryagain.app/privacypolicy/morehabits');
+                                          },
+                                      ),
+                                      TextSpan(text: " which details how to manage your preferences."),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 20),
+
+                        ElevatedButton(
+                          child: Text(
+                            'Sign Up',
+                            style: GoogleFonts.outfit(
+                                color: Colors.grey[200],
+                                fontSize: 12,
+                                
+                                fontWeight: FontWeight.w700),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.grey.shade600,
+                            minimumSize: Size(double.infinity, 40),
+                            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                          onPressed: () async {
+                            if (!_isAgreeChecked) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Please agree to the terms and conditions.')),
+                              );
+                              return;
+                            }
+
+                            if (passwordController.text.isEmpty || rePasswordController.text.isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Password fields cannot be empty')),
+                              );
+                              return;
+                            }
+
+                            if (passwordController.text != rePasswordController.text) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Passwords do not match')),
+                              );
+                              return;
+                            }
+
+                            try {
+                              UserCredential userCredential = await FirebaseAuth.instance
+                                  .createUserWithEmailAndPassword(
+                                email: emailController.text,
+                                password: passwordController.text,
+                              );
+
+                              // Aquí solo almacenamos los campos necesarios sin la contraseña.
+                              await FirebaseFirestore.instance
+                                  .collection('users')
+                                  .doc(userCredential.user!.uid)
+                                  .set({
+                                'name': nameController.text,
+                                'email': emailController.text,
+                                'checkdelterms': _isAgreeChecked,
+                                // 'photoUrl': null,  // Puedes agregar este campo si es necesario
+                              });
+
+                              if (mounted) {
+                                context.go('/home');
+                              }
+                            } on FirebaseAuthException catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Failed to sign up: ${e.message}')),
+                              );
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('An unknown error occurred: $e')),
+                              );
+                            }
+                          },
+                        ),
+                        ] else if (!isEmailEntered) ...[
+                          TextFormField(
+                            maxLength: 50, // Limita los caracteres a 50
+                            controller: emailController,
+                            keyboardType: TextInputType.emailAddress,
+                            cursorColor: Colors.black,
+                            style: GoogleFonts.outfit(
+                              fontSize: 12,
+                              color: Colors.grey.shade900,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.grey[200],
+                              hintText: 'Email',
+                              contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                                borderSide: BorderSide(
+                                  color: isEmailValid ? Colors.black : Colors.red,
+                                  width: 3.0,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                                borderSide: BorderSide(
+                                  color: isEmailValid ? Colors.grey[200]! : Colors.red,
+                                  width: 1.0,
+                                ),
+                              ),
+                            ),
+                          ),
                           SizedBox(height: 20),
                           ElevatedButton(
                             child: Text(
                               'Continue',
-                              style: TextStyle(
+                              style: GoogleFonts.outfit(
                                   color: Colors.grey[200],
                                   fontSize: 12,
-                                  fontFamily: 'Geologica',
-                                  fontWeight: FontWeight.w700), // Texto blanco
-
+                                  fontWeight: FontWeight.w700),
                             ),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.black, // Fondo negro
-                              disabledForegroundColor:
-                                  Colors.grey.withOpacity(0.38),
-                              disabledBackgroundColor: Colors.grey.withOpacity(
-                                  0.12), // Color del botón cuando está deshabilitado o en press
-                              minimumSize: Size(double.infinity,
-                                  40), // Ancho máximo y alto fijo
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 20,
-                                  vertical:
-                                      18), // Padding vertical para que coincida con la altura del TextField
+                              backgroundColor: Colors.grey.shade900,
+                              minimumSize: Size(double.infinity, 40),
+                              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    8.0), // Mismo radio de borde que el TextField
+                                borderRadius: BorderRadius.circular(8.0),
                               ),
                             ),
                             onPressed: () {
-                              setState(() {
-                                isEmailEntered =
-                                    true; // Actualiza el estado para mostrar el campo de contraseña
-                              });
+                              _validateEmail();
+                              if (isEmailValid) {
+                                setState(() {
+                                  isEmailEntered = true;
+                                });
+                              }
                             },
                           ),
                         ] else ...[
                           TextField(
-                              style: TextStyle(
-                            fontSize: 12,
-                            fontFamily: 'Geologica',
-                            color: Colors.grey.shade900,
-                            fontWeight: FontWeight.w600
-                          ),
-
+                            style: GoogleFonts.outfit(
+                              fontSize: 12,
+                              color: Colors.grey.shade900,
+                              fontWeight: FontWeight.w600,
+                            ),
                             controller: passwordController,
-
                             keyboardType: TextInputType.text,
-                            obscureText:
-                                !_passwordVisible, // Determina si el texto debe ser oscurecido
-                            obscuringCharacter:
-                                '●', // Utiliza un carácter de círculo más grande
-                            cursorColor: Colors.black, // Color del cursor
+                            obscureText: !_passwordVisible,
+                            obscuringCharacter: '●',
+                            cursorColor: Colors.black,
                             decoration: InputDecoration(
-                              
                               suffixIcon: Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(0, 15, 20, 0),
+                                padding: const EdgeInsets.fromLTRB(0, 15, 20, 0),
                                 child: GestureDetector(
                                   onTap: () {
                                     setState(() {
@@ -225,279 +604,278 @@ class _LoginScreenState extends State<LoginScreen> {
                                   },
                                   child: Text(
                                     _passwordVisible ? "Hide" : "View",
-                                      style: TextStyle(
+                                    style: GoogleFonts.outfit(
                                       fontSize: 12,
-                                      fontFamily: 'Geologica',
                                       color: Colors.grey.shade900,
-                                      fontWeight: FontWeight.w800
+                                      fontWeight: FontWeight.w800,
                                     ),
-
                                   ),
                                 ),
                               ),
-                              
                               filled: true,
                               fillColor: Colors.grey[300],
                               hintText: 'Password',
-                              // Ajustes adicionales para la apariencia del borde
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8.0),
                                 borderSide: BorderSide(
-                                  color: Colors
-                                      .black, // Borde verde cuando el TextField está en foco
-                                  width: 3.0, // Grosor del borde
+                                  color: Colors.black,
+                                  width: 3.0,
                                 ),
                               ),
-                              
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8.0),
                                 borderSide: BorderSide(
-                                  color: Colors.grey[
-                                      200]!, // Borde gris claro en el estado normal
-                                  width: 1.0, // Grosor estándar del borde
+                                  color: Colors.grey[200]!,
+                                  width: 1.0,
                                 ),
                               ),
-                              // Ajustes para el texto de sugerencia, color de relleno, etc.
                             ),
-                          
                           ),
                           SizedBox(height: 20),
                           ElevatedButton(
                             child: Text(
                               'Login',
-                              style: TextStyle(
+                              style: GoogleFonts.outfit(
                                   fontSize: 12,
-                                  fontFamily: 'Geologica',
                                   fontWeight: FontWeight.w700,
-                                  color: Colors.grey[200]), // Texto blanco
+                                  color: Colors.grey[200]),
                             ),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.black, // Fondo negro
-                              disabledForegroundColor:
-                                  Colors.grey.withOpacity(0.38),
-                              disabledBackgroundColor: Colors.grey.withOpacity(
-                                  0.12), // Color del botón cuando está deshabilitado o en press
-                              minimumSize: Size(double.infinity,
-                                  52), // Ancho máximo y alto fijo
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 20,
-                                  vertical:
-                                      0), // Padding vertical para que coincida con la altura del TextField
+                              backgroundColor: Colors.grey.shade900,
+                              minimumSize: Size(double.infinity, 52),
+                              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    8.0), // Mismo radio de borde que el TextField
+                                borderRadius: BorderRadius.circular(8.0),
                               ),
                             ),
                             onPressed: () async {
                               if (emailController.text.contains('@')) {
                                 try {
-                                  print(
-                                      'Intentando iniciar sesión con correo: ${emailController.text}');
-                                  UserCredential userCredential =
-                                      await FirebaseAuth.instance
-                                          .signInWithEmailAndPassword(
+                                  UserCredential userCredential = await FirebaseAuth.instance
+                                      .signInWithEmailAndPassword(
                                     email: emailController.text,
                                     password: passwordController.text,
                                   );
-                                  print('Inicio de sesión exitoso');
                                   if (mounted) {
-                                    context.go(
-                                        '/basescreen'); // Assuming GoRouter is set up properly
+                                    context.go('/home');
                                   }
                                 } on FirebaseAuthException catch (e) {
-                                  print('Error de Firebase Auth: ${e.code}');
                                   if (e.code == 'user-not-found') {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                            content: Text(
-                                                'No user found for that email.')));
+                                        SnackBar(content: Text('No user found for that email.')));
                                   } else if (e.code == 'wrong-password') {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                            content: Text(
-                                                'Wrong password provided for that user.')));
+                                        SnackBar(content: Text('Wrong password provided for that user.')));
                                   }
                                 }
                               }
                             },
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: TextButton(
-                                onPressed: () {
-                                  // Acción para navegar a Forgot your password
-                                },
-                                child: Text(
-                                  "Forgot your password?",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey[200],
-                                    fontFamily: 'Geologica',
-                                    fontSize: 12,
-                                  ),
+                         Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: TextButton(
+                              onPressed: () {
+                                if (emailController.text.isNotEmpty && emailController.text.contains('@')) {
+                                  _resetPassword(emailController.text);
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: const Text('Please enter a valid email address.'),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                }
+                              },
+                              child: Text(
+                                "Forgot your password?",
+                                style: GoogleFonts.outfit(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey[200],
+                                  fontSize: 12,
                                 ),
-                                style: TextButton.styleFrom(
-                                  padding: EdgeInsets
-                                      .zero, // Remueve el padding para alinear el texto
-                                  alignment: Alignment
-                                      .centerLeft, // Alinea el texto a la izquierda
-                                ),
+                              ),
+                              style: TextButton.styleFrom(
+                                padding: EdgeInsets.zero,
+                                alignment: Alignment.centerLeft,
                               ),
                             ),
                           ),
+                        ),
                         ],
-                        if (!isEmailEntered) ...[
-                          SizedBox(
-                              height:
-                                  20), // Espacio entre el botón 'Continue' y el texto 'or'
+                        if (!isSignUp && !isEmailEntered) ...[
+                          SizedBox(height: 20),
                           Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal:
-                                    80.0), // Ajusta este valor según tus necesidades
+                            padding: EdgeInsets.symmetric(horizontal: 80.0),
                             child: Center(
                               child: Text(
                                 'or',
-                                style: TextStyle(
+                                style: GoogleFonts.outfit(
                                   fontSize: 14,
+                                   shadows: 
+                            [
+                              Shadow(
+                                color: Colors.black,
+                                offset: Offset(2, 2),
+                                blurRadius: 2,
+                              ),
+                            ],
                                   fontWeight: FontWeight.w900,
-                                  color: Colors.grey[900],
-                                  fontFamily: 'Geologica',
+                                  color: Colors.grey.shade300,
+                                  
                                 ),
                               ),
                             ),
                           ),
+                          SizedBox(height: 20),
                           SizedBox(
-                              height:
-                                  20), // Espacio entre el texto 'or' y los botones de autenticación social
-                          SizedBox(
-                            width: double
-                                .infinity, // Esto hará que el botón se expanda al ancho del contenedor
+                            width: double.infinity,
                             child: TextButton.icon(
                               icon: SvgPicture.asset(
-                                'assets/icons/facebook.svg', // Asegúrate de que la ruta del asset es correcta
+                                'assets/icons/facebook.svg',
                                 width: 24.0,
                                 height: 24.0,
                               ),
                               label: Text(
                                 'Continue with Facebook',
-                                style: TextStyle(
+                                style: GoogleFonts.outfit(
                                   color: Colors.grey[200],
                                   fontWeight: FontWeight.w700,
-                                  fontFamily: 'Geologica',
                                   fontSize: 12,
                                 ),
                               ),
                               style: TextButton.styleFrom(
                                 foregroundColor: Colors.white,
-                                backgroundColor: Colors
-                                    .blue, // El color de fondo de Facebook
-                                padding: EdgeInsets.symmetric(
-                                    vertical:
-                                        15.0), // Alinea el padding vertical con el botón "Continue"
+                                backgroundColor: Colors.blue,
+                                padding: EdgeInsets.symmetric(vertical: 15.0),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8.0),
-                                ), // El color del texto e icono cuando se presiona el botón
+                                ),
                               ),
                               onPressed: () {
                                 // Tu lógica de autenticación con Facebook aquí
                               },
                             ),
                           ),
-
                           Padding(
                             padding: const EdgeInsets.only(top: 20),
                             child: SizedBox(
-                              width: double
-                                  .infinity, // Esto hará que el botón se expanda al ancho del contenedor
+                              width: double.infinity,
                               child: TextButton.icon(
                                 icon: SvgPicture.asset(
-                                  'assets/icons/google.svg', // Asegúrate de que la ruta del asset es correcta
+                                  'assets/icons/google.svg',
                                   width: 24.0,
                                   height: 24.0,
                                 ),
                                 label: Text(
                                   'Continue with Google',
-                                  style: TextStyle(
+                                  style: GoogleFonts.outfit(
                                     color: Colors.grey[900],
                                     fontWeight: FontWeight.w800,
-                                    fontFamily: 'Geologica',
                                     fontSize: 12,
                                   ),
                                 ),
                                 style: TextButton.styleFrom(
                                   foregroundColor: Colors.black,
-                                  backgroundColor: Colors.grey[
-                                      200], // El color de fondo de Facebook
-                                  padding: EdgeInsets.symmetric(
-                                      vertical:
-                                          15.0), // Alinea el padding vertical con el botón "Continue"
+                                  backgroundColor: Colors.grey[200],
+                                  padding: EdgeInsets.symmetric(vertical: 15.0),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8.0),
-                                  ), // El color del texto e icono cuando se presiona el botón
+                                  ),
                                 ),
-                                onPressed: (
-                                  
-                                ) {
-                                  // Tu lógica de autenticación con Facebook aquí
-                                },
+                                onPressed: _signInWithGoogle,
                               ),
                             ),
                           ),
-                        
-
                           Padding(
-                            padding: const EdgeInsets.all(30.0),
+                            padding: const EdgeInsets.all(10.0),
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment
-                                  .start, // Alinea los widgets a la izquierda
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Don't have an account? ",
-                                      style: TextStyle(
-                                        color: Colors.grey[300],
-                                        fontFamily: 'Geologica',
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        // Acción para navegar al registro
-                                      },
-                                      child: Text(
-                                        "Sign up",
-                                        style: TextStyle(
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 10),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "Don't have an account? ",
+                                        style: GoogleFonts.outfit(
+                                          color: Colors.grey.shade300,
+                                          fontWeight: FontWeight.w400,
                                           fontSize: 12,
-                                          fontWeight: FontWeight.w900,
-                                          color: Colors.teal.shade100,
-                                          fontFamily: 'Geologica',
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    // Acción para navegar a Forgot your password
-                                  },
-                                  child: Text(
-                                    "Forgot your password?",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.teal.shade100,
-                                      fontSize: 12,
-
-                                    ),
+                                      SizedBox(width: 2),
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            isSignUp = true;
+                                          });
+                                        },
+                                        child: Text(
+                                          "Sign up",
+                                          style: GoogleFonts.outfit(
+                                            fontSize: 13,
+                                             shadows: 
+                            [
+                              Shadow(
+                                color: Colors.black,
+                                offset: Offset(2, 2),
+                                blurRadius: 2,
+                              ),
+                            ],
+                                            fontWeight: FontWeight.w900,
+                                            color: Colors.grey.shade300,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  style: TextButton.styleFrom(
-                                    padding: EdgeInsets
-                                        .zero, // Remueve el padding para alinear el texto
-                                    alignment: Alignment
-                                        .centerLeft, // Alinea el texto a la izquierda
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 10),
+                                  child: Center(
+                                    child: RichText(
+                                      textAlign: TextAlign.center,
+                                      text: TextSpan(
+                                        style: GoogleFonts.outfit(
+                                          fontSize: 12,
+                                          color: Colors.grey.shade400,
+                                        ),
+                                        children: [
+                                          TextSpan(text: "By selecting Continue, you accept our "),
+                                          TextSpan(
+                                            text: "Terms of Service",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.blue,
+                                            ),
+                                            recognizer: TapGestureRecognizer()
+                                              ..onTap = () {
+                                                launch(
+                                                    'https://www.tryagain.app/termsofservice/morehabits');
+                                              },
+                                          ),
+                                          TextSpan(
+                                              text: " and confirm that you have reviewed our "),
+                                          TextSpan(
+                                            text: "Privacy Policy,",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.blue,
+                                            ),
+                                            recognizer: TapGestureRecognizer()
+                                              ..onTap = () {
+                                                launch(
+                                                    'https://www.tryagain.app/privacypolicy/morehabits');
+                                              },
+                                          ),
+                                          TextSpan(
+                                              text: " which details how to manage your preferences."),
+                                        ],
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ],
