@@ -150,7 +150,7 @@ Widget _buildUploadNavItem() {
                 height: 32,
               ),
             ),
-            Text('Training', style: TextStyle(color: Colors.white, fontSize: 10)), // Texto siempre visible
+            Text('Voice Chat', style: TextStyle(color: Colors.white, fontSize: 10)), // Texto siempre visible
           ],
         ),
       ),
