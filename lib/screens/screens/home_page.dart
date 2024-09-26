@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -103,11 +105,77 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           ),
                         ],
                       ),
-                      Icon(
-                        FontAwesomeIcons.plus,
-                        color: Colors.white,
-                        size: 25,
-                      ),
+                                          Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            HapticFeedback.lightImpact();
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 5.0, horizontal: 10.0),
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade100.withOpacity(0.9),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: Row(
+                              children: [
+                                SvgPicture.asset(
+                                  'assets/svg/timeline.svg',
+                                    width: 15,
+                                ),
+                                SizedBox(width: 5),
+                                Text(
+                                  'Timeline',
+                                  style: GoogleFonts.outfit(
+                                    fontSize: 10,
+                                    color: Colors.grey.shade900,
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 10),
+
+                        GestureDetector(
+                          onTap: () {
+                            HapticFeedback.lightImpact();
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 5.0, horizontal: 10.0),
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade100.withOpacity(0.9),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: Row(
+                              children: [
+                                SvgPicture.asset(
+                                  'assets/svg/dumbell.svg',
+                                  width: 15,
+                                ),
+                                SizedBox(width: 5),
+                                Text(
+                                  'Quick Exercises',
+                                  style: GoogleFonts.outfit(
+                                    fontSize: 10,
+                                    color: Colors.grey.shade900,
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        // Botón de "Add more"
+                        SizedBox(
+                          width: 10,
+                        ),
+                      ],
+                    ),
                     ],
                   ),
                 ),

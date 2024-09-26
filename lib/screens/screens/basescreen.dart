@@ -70,13 +70,13 @@ class _BaseScreenState extends State<BaseScreen> {
             SvgPicture.asset(
               'assets/svg/profile.svg',
               height: 30,
-              color: _selectedIndex == index ? Colors.teal.shade100 : Colors.grey,
+              color: _selectedIndex == index ? Colors.grey.shade100 : Colors.grey,
             )
           else if (svgAsset != null) // Si no hay foto, mostrar el ícono SVG
             SvgPicture.asset(
               svgAsset,
               height: 30,
-              color: _selectedIndex == index ? Colors.teal.shade100 : Colors.grey,
+              color: _selectedIndex == index ? Colors.grey.shade100 : Colors.grey,
             ),
           Text(
             label,
@@ -142,12 +142,12 @@ Widget _buildUploadNavItem() {
             Container(
               padding: EdgeInsets.all(4),
               decoration: BoxDecoration(
-                color: Colors.grey.shade100.withOpacity(0.8), // Fondo blanco para el botón de acción
+                color: Colors.white, // Fondo blanco para el botón de acción
                 shape: BoxShape.circle,
               ),
               child: SvgPicture.asset(
                 'assets/svg/mic.svg', // Cambiado a imagen SVG
-                height: 34,
+                height: 32,
               ),
             ),
             Text('Training', style: TextStyle(color: Colors.white, fontSize: 10)), // Texto siempre visible
