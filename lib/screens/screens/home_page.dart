@@ -85,6 +85,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
@@ -96,9 +97,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           ),
                           SizedBox(width: 10),
                           Text(
-                            '60 KG',
+                            '0 KG',
                             style: GoogleFonts.manjari(
-                              fontSize: 25,
+                              fontSize: 35,
                               color: Colors.white,
                               fontWeight: FontWeight.w900,
                             ),
@@ -171,15 +172,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           ),
                         ),
                         // Botón de "Add more"
-                        SizedBox(
-                          width: 10,
-                        ),
+
                       ],
                     ),
                     ],
                   ),
                 ),
-                SizedBox(height: 5),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: Row(
