@@ -147,9 +147,10 @@ Widget _buildUploadNavItem() {
               ),
               child: SvgPicture.asset(
                 'assets/svg/mic.svg', // Cambiado a imagen SVG
-                height: 32,
+                height: 30,
               ),
             ),
+            SizedBox(height: 2),
             Text('Voice Chat', style: TextStyle(color: Colors.white, fontSize: 10)), // Texto siempre visible
           ],
         ),
