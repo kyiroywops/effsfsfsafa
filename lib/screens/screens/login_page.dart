@@ -130,29 +130,21 @@ class _LoginScreenState extends State<LoginScreen> {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/images/background.webp'),
+                image: AssetImage('assets/images/background.png'),
                 fit: BoxFit.cover,
               ),
             ),
           ),
           // Botón para retroceder
+          
           Positioned(
-            top: 40,
-            left: 10,
-            child: IconButton(
-              icon: Icon(FontAwesomeIcons.circleChevronLeft, color: Colors.grey.shade100, size: 22),
-              onPressed: () {
-              },
-            ),
-          ),
-          Positioned(
-            top: titleTopPosition - 120, // Ajusta la posición vertical según sea necesario
+            top: titleTopPosition - 150, // Ajusta la posición vertical según sea necesario
             left: 0,
             right: 0,
             child: Center(
               child: Image.asset(
                 'assets/images/logo.png', // Ruta del logo
-                height: 70, // Ajusta el tamaño según tus necesidades
+                height: 130, // Ajusta el tamaño según tus necesidades
               ),
             ),
           ),
