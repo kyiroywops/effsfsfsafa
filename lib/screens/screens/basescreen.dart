@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gymtrack/screens/screens/calendar_page.dart';
+import 'package:gymtrack/screens/screens/chat.dart';
+import 'package:gymtrack/screens/screens/ejercicios.dart';
 import 'package:gymtrack/screens/screens/home_page.dart';
 import 'package:gymtrack/screens/screens/settings_screen.dart';
 import 'package:gymtrack/screens/widgets/showbottomsheetwave.dart';
@@ -16,9 +17,9 @@ class _BaseScreenState extends State<BaseScreen> {
   final User? user = FirebaseAuth.instance.currentUser;
   static List<Widget> _widgetOptions = <Widget>[
     HomeScreen(), // Historial
-    Ejercicios(),
-    Text('Calendario', textAlign: TextAlign.center), // Calendario
-    Text('Calendario', textAlign: TextAlign.center), // Calend
+    EjerciciosScreen(),
+    Text('Voice', textAlign: TextAlign.center), // Calendario
+    chatScreen(),
     SettingsScreen(), // Perfil
   ];
 
@@ -81,7 +82,7 @@ class _BaseScreenState extends State<BaseScreen> {
             label,
             style: TextStyle(
               color: _selectedIndex == index ? Colors.white : Colors.grey,
-              fontSize: _selectedIndex == index ? 11 : 9,
+              fontSize: 9,
               fontWeight: _selectedIndex == index ? FontWeight.w800 : FontWeight.w600,
               fontFamily: 'Geologica',
             ),

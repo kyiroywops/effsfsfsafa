@@ -106,7 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
           'email': userCredential.user?.email,
         });
 
-        context.go('/home');
+        context.go('/basescreen');
       }
     } on FirebaseAuthException catch (e) {
       print('Error de FirebaseAuth: ${e.message}');
@@ -502,7 +502,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               });
 
                               if (mounted) {
-                                context.go('/home');
+                                context.go('/basescreen');
                               }
                             } on FirebaseAuthException catch (e) {
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -649,7 +649,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     password: passwordController.text,
                                   );
                                   if (mounted) {
-                                    context.go('/home');
+                                    context.go('/basescreen');
                                   }
                                 } on FirebaseAuthException catch (e) {
                                   if (e.code == 'user-not-found') {
