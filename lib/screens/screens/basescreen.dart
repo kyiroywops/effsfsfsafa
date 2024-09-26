@@ -1,8 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gymtrack/screens/screens/calendar_page.dart';
 import 'package:gymtrack/screens/screens/home_page.dart';
-import 'package:gymtrack/screens/screens/profile_page.dart';
+import 'package:gymtrack/screens/screens/settings_screen.dart';
 import 'package:gymtrack/screens/widgets/showbottomsheetwave.dart';
 
 class BaseScreen extends StatefulWidget {
@@ -12,12 +13,13 @@ class BaseScreen extends StatefulWidget {
 
 class _BaseScreenState extends State<BaseScreen> {
   int _selectedIndex = 0;
+  final User? user = FirebaseAuth.instance.currentUser;
   static List<Widget> _widgetOptions = <Widget>[
     HomeScreen(), // Historial
     Ejercicios(),
     Text('Calendario', textAlign: TextAlign.center), // Calendario
     Text('Calendario', textAlign: TextAlign.center), // Calend
-    ProfileScreen(), // Perfil
+    SettingsScreen(), // Perfil
   ];
 
  
@@ -36,7 +38,12 @@ class _BaseScreenState extends State<BaseScreen> {
             _buildNavItem('assets/svg/biceps.svg', 'Exercises', 1),
             _buildUploadNavItem(), // Botón central con ícono relleno siempre visible
             _buildNavItem('assets/svg/message.svg', 'Message', 3),
-            _buildNavItemWithIcon(Icons.person, 'Profile', 4), // Mantén el ícono para el perfil
+            _buildNavItem(
+              null, // No icono, solo la foto del usuario
+              'Profile',
+              4,
+              user?.photoURL, // Pasar la URL de la foto de perfil
+            ),
           ],
         ),
       ),
@@ -44,7 +51,7 @@ class _BaseScreenState extends State<BaseScreen> {
   }
 
   // Método para construir elementos de navegación con SVG
-  Widget _buildNavItem(String svgAsset, String label, int index) {
+  Widget _buildNavItem(String? svgAsset, String label, int index, [String? photoURL]) {
     return InkWell(
       onTap: () => setState(() => _selectedIndex = index),
       splashColor: Colors.transparent,
@@ -54,6 +61,12 @@ class _BaseScreenState extends State<BaseScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
+            if (photoURL != null) // Si se pasa la URL de la foto de perfil, mostrar la foto
+              CircleAvatar(
+                radius: 12, // Radio del avatar
+                backgroundImage: NetworkImage(photoURL),
+              )
+           else if (svgAsset != null) // Si no hay foto, mostrar el icono
             SvgPicture.asset(
               svgAsset,
               height: 24,

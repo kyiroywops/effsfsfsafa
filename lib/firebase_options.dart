@@ -63,6 +63,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '456103746725',
     projectId: 'gymtrackapp-a2e77',
     storageBucket: 'gymtrackapp-a2e77.appspot.com',
+    iosClientId: '456103746725-2tdltge4moa35o0hu9vhfin7gj8ieb6k.apps.googleusercontent.com',
     iosBundleId: 'com.tryagain.gymtrack',
   );
 
