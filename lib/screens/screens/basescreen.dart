@@ -5,6 +5,7 @@ import 'package:gymtrack/screens/screens/chat.dart';
 import 'package:gymtrack/screens/screens/ejercicios.dart';
 import 'package:gymtrack/screens/screens/home_page.dart';
 import 'package:gymtrack/screens/screens/settings_screen.dart';
+import 'package:gymtrack/screens/widgets/chatvoice_widget.dart';
 import 'package:gymtrack/screens/widgets/showbottomsheetwave.dart';
 
 class BaseScreen extends StatefulWidget {
@@ -119,19 +120,21 @@ class _BaseScreenState extends State<BaseScreen> {
   }
 
   // Método para el botón de subir entrenamientos con SVG
-Widget _buildUploadNavItem() {
-  return InkWell(
-    onTap: () {
-      showModalBottomSheet(
-        context: context,
-        builder: (BuildContext context) {
-          return BottomSheetWave(
-            title: 'Timmy',
-            subtitle: 'Tell me what you want to train today',
-          );
-        },
-      );
-    },
+  // Método para abrir el chat de voz en el BottomSheet
+  Widget _buildUploadNavItem() {
+    return InkWell(
+      onTap: () {
+        showModalBottomSheet(
+          context: context,
+          isScrollControlled: true, // Permite que el BottomSheet ocupe todo el espacio necesario
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          builder: (BuildContext context) {
+            return VoiceChatWidget(); // Usar el widget de chat de voz
+          },
+        );
+      },
       splashColor: Colors.transparent,
       highlightColor: Colors.transparent,
       child: Container(
